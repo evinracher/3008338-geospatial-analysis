@@ -1,3 +1,4 @@
 Libro_AnalisisGeoespacial/
 .ipynb_checkpoints/
 .virtual_documents/
+*gpkg*
