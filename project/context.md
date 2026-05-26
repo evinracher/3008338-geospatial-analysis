@@ -16,3 +16,4 @@ https://app.powerbi.com/view?r=eyJrIjoiMjFjNGI4NmQtNWU5MS00ZWY0LWFmZTMtODM3MTdkZ
 - Formatear y corregir código (ortografía, organización del código)
 - Preparar posters
 - Diagramas de flujo!!!! (Redes, XGBoost, Random Forest, los otros son muy basic)
+- Si da tiempo, incluir un modelo geoespacial básico
