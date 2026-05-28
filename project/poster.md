@@ -2,7 +2,9 @@ Seciones que deben ir en el poster para la presentación
 
 # Descripción del problema
 
-En este proyecto se busca predecir el precio de un inmueble en Medellín, basado en el número de habitaciones, número de baños, el area total del inmueble, el barrio en que está ubicado y la ubicación (dadas por la latitud y la longitud). Es un problema de regresión supervisada, y se evaluaran los métodos: Regresión lineal, Árbol de decisión, Random Forest, XGBoost y redes neuronales.
+En este proyecto se busca predecir el precio de un inmueble en Medellín, basado en el número de habitaciones, número de baños, el area total del inmueble, el barrio en que está ubicado y la ubicación (dadas por la latitud y la longitud). Es un problema de regresión supervisada, y se evaluarán los modelos: Regresión lineal, Árbol de decisión, Random Forest, XGBoost y redes neuronales.
+
+, y se evaluarán los modelos: Regresión lineal, Árbol de decisión, Random Forest, XGBoost y redes neuronales.
 
 # Métodología
 
@@ -10,7 +12,9 @@ Describir mediante un diagrama de flujo las tres métodologías
 
 CRÍTICO
 
-Se realizó el procesamiento de datos del dataset, limpiando y filtrando los datos que no servían para el proyecto. Se realizó la normalización de los datos, la imputación y se manejaron algunos outliers en el precio. Luego se dividió el dataset en datos de entrenamiento y prueba y se  probaron varios modelos bases sin optimizar. Esto permitió mirar el desempeño de los modelos y hacer algunos ajustes. Posteriormente se optimizaron los parametros de algunos modelos usando para esto Grid Search y finalmente se compararon los modelos en el dataset de prueba.
+La implementación de este proyecto se realizón en Python, llevando a cabo el procesamiento de datos del dataset, limpiando y filtrando los datos que no servían para el proyecto. Se realizó la normalización de los datos, la imputación y se manejaron algunos outliers en el precio. Luego se dividió el dataset en datos de entrenamiento y prueba y se  probaron varios modelos bases sin optimizar. Esto permitió mirar el desempeño de los modelos y hacer algunos ajustes. Posteriormente se optimizaron los parametros de algunos modelos usando para esto Grid Search y finalmente se compararon los modelos en el dataset de prueba.
+
+Se evaluaron los modelos: Regresión lineal, Árbol de decisión, Random Forest, XGBoost y redes neuronales.
 
 # Base de datos
 
