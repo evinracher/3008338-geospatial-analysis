@@ -4,3 +4,4 @@ Libro_AnalisisGeoespacial/
 *gpkg*
 *project/dataset/*
 data/
+*.DS_Store*
