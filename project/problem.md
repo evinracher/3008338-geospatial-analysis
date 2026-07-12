@@ -1,16 +1,8 @@
-Seciones que deben ir en el poster para la presentación
-
 # Descripción del problema
 
-En este proyecto se busca predecir el precio de un inmueble en Medellín, basado en el número de habitaciones, número de baños, el area total del inmueble, el barrio en que está ubicado y la ubicación (dadas por la latitud y la longitud). Es un problema de regresión supervisada, y se evaluarán los modelos: Regresión lineal, Árbol de decisión, Random Forest, XGBoost y redes neuronales.
-
-, y se evaluarán los modelos: Regresión lineal, Árbol de decisión, Random Forest, XGBoost y redes neuronales.
+En este proyecto se busca predecir el precio de un inmueble en Medellín, basado en el número de habitaciones, número de baños, el area total del inmueble, el barrio en que está ubicado y la ubicación (dadas por la latitud y la longitud). 
 
 # Métodología
-
-Describir mediante un diagrama de flujo las tres métodologías
-
-CRÍTICO
 
 La implementación de este proyecto se realizón en Python, llevando a cabo el procesamiento de datos del dataset, limpiando y filtrando los datos que no servían para el proyecto. Se realizó la normalización de los datos, la imputación y se manejaron algunos outliers en el precio. Luego se dividió el dataset en datos de entrenamiento y prueba y se  probaron varios modelos bases sin optimizar. Esto permitió mirar el desempeño de los modelos y hacer algunos ajustes. Posteriormente se optimizaron los parametros de algunos modelos usando para esto Grid Search y finalmente se compararon los modelos en el dataset de prueba.
 
@@ -20,18 +12,13 @@ Se evaluaron los modelos: Regresión lineal, Árbol de decisión, Random Forest,
 
 Los datos fueron tomados de Kaggle
 
-TODO: describir los tipos de datos
-
 Referencia: https://www.kaggle.com/datasets/julianusugaortiz/colombia-housing-properties-price
 
 Se hizo procesamiento de datos y descartaron columnas que no eran relevantes para el problema, además de eliminar registros nulos.
 
-TODO: INSERTAR TABLAS Y DISTRIBUCIONES DE FRECUENCIA DE PROPERTY TYPE Y NEIGHBORHOOD
-
 # Resultados
 
-Resuma mediante tablas y figuras los principales resultados, evidenciando la
-comparación de las técnicas aplicadas.
+TODO
 
 # Conclusiones
 
@@ -50,13 +37,3 @@ Relacione tantas referencias bibliográficas como los enlaces (si aplica, libro 
 J. U. Ortiz, “Colombia Housing Properties Price,” Kaggle.com, 2022. https://www.kaggle.com/datasets/julianusugaortiz/colombia-housing-properties-price (accessed May 28, 2026).
 
 A. Géron, Hands-on Machine Learning with Scikit-Learn, Keras, and Tensorflow, Second Edition. Sebastopol (CA): O’Reilly, 2019. ‌
-
-PREGUNTAS:
-
-- SE PUEDE HACER EN OTRO SOFTWARE O TINENE QUE SER EN POWER POINT Y CON BASE EN LA PLATILLA (ESCUDO Y DEMÁS): MEJOR ESE PARA MAS ESTANDAR
-
-- Como sería el paddle? hay que registrarse o que se pondría en el asunto?: NOTA Y AUTORES
-
-- La entrega está para el viernes 29 de Mayo en el moodle, pero en la guía dice que para el 30. Entonces cual sería la fecha final (29 de Mayo)
-
-Practica 3 3 de junio
