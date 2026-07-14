@@ -22,7 +22,7 @@ El flujo aplicado fue:
 8. Ajustar OLS (*Ordinary Least Squares*, o Mínimos Cuadrados Ordinarios), SEM (*Spatial Error Model*, o Modelo de Error Espacial) y SAR-Lag (*Spatial Autoregressive Lag Model*, o Modelo Autorregresivo Espacial con rezago) para representar explícitamente la dependencia espacial.
 9. Comparar capacidad de ajuste, predicción y autocorrelación residual.
 
-El resultado principal es que los precios presentan una estructura espacial fuerte. SEM logra representar completamente la dependencia residual, SAR-Lag obtiene el mejor ajuste entre los modelos estadísticos y Random Forest mantiene el mejor desempeño predictivo en el conjunto de prueba.
+El resultado principal es que los precios presentan una estructura espacial fuerte. SEM representa adecuadamente la dependencia residual durante el ajuste, SAR-Lag es el mejor modelo estadístico para predicción fuera de muestra y Random Forest mantiene el mejor desempeño predictivo general.
 
 ---
 
@@ -84,7 +84,7 @@ El dataset se dividió aleatoriamente en:
 - 70 % para entrenamiento.
 - 30 % para prueba.
 
-El conjunto de prueba se usó al final para medir la capacidad predictiva de Random Forest y XGBoost.
+Todos los modelos, incluidos OLS, SEM y SAR-Lag, se ajustaron con entrenamiento y se evaluaron sobre el mismo conjunto de prueba.
 
 ---
 
@@ -108,10 +108,10 @@ Las métricas usadas fueron MAE (*Mean Absolute Error*, o Error Absoluto Medio),
 
 | Modelo | MAE | RMSE | R² |
 |---|---:|---:|---:|
-| Random Forest base | $144,4 millones | $299,0 millones | 0,705 |
-| Random Forest optimizado | **$143,2 millones** | **$294,2 millones** | **0,714** |
-| XGBoost base | $212,4 millones | $370,7 millones | 0,546 |
-| XGBoost optimizado | $198,1 millones | $348,8 millones | 0,598 |
+| Random Forest base | $144,7 millones | $299,4 millones | 0,704 |
+| Random Forest optimizado | **$143,8 millones** | **$295,4 millones** | **0,712** |
+| XGBoost base | $212,7 millones | $372,5 millones | 0,542 |
+| XGBoost optimizado | $198,3 millones | $349,1 millones | 0,598 |
 
 Random Forest optimizado fue el mejor modelo predictivo. La importancia de variables mostró un peso alto de baños, latitud, longitud y pertenencia a El Poblado.
 
@@ -275,9 +275,9 @@ El gráfico global identifica una tendencia general. Para localizar agrupaciones
 
 | Vecinos | Moran de `price` | Moran de `log_price` | p simulado |
 |---:|---:|---:|---:|
-| 5 | 0,5165 | 0,6506 | 0,001 |
-| 10 | 0,4542 | 0,6000 | 0,001 |
-| 20 | 0,4151 | 0,5671 | 0,001 |
+| 5 | 0,4808 | 0,6254 | 0,001 |
+| 10 | 0,4448 | 0,5898 | 0,001 |
+| 20 | 0,4032 | 0,5553 | 0,001 |
 
 Conclusiones:
 
@@ -304,8 +304,8 @@ Si los residuos siguen agrupados, el modelo se equivoca de manera sistemática s
 
 Sobre 10.745 observaciones de prueba:
 
-- Moran del residuo en precio original: $I=0,0222$, `p = 0.001`.
-- Moran del residuo logarítmico: $I=0,0296$, `p = 0.001`.
+- Moran del residuo en precio original: $I=0,0212$, `p = 0.001`.
+- Moran del residuo logarítmico usado en la comparación final: $I=0,0293$, `p = 0.001`.
 
 La asociación es estadísticamente significativa, pero muy pequeña. Random Forest captura casi todo el patrón espacial mediante latitud, longitud, barrio y relaciones no lineales.
 
@@ -337,10 +337,10 @@ Las áreas se excluyeron por su alto porcentaje de datos faltantes.
 
 ## 9.3 Resultados
 
-- R²: 0,5861.
-- R² ajustado: 0,5857.
+- R²: 0,5870.
+- R² ajustado: 0,5865.
 - RMSE de `log_price`: 0,4745.
-- Moran residual: $I=0,2673$, `p = 0.001`.
+- Moran residual: $I=0,2461$, `p = 0.001`.
 
 OLS explica cerca del 59 % de la variación, pero deja una dependencia espacial importante. Baños es la variable numérica con mayor efecto. El Poblado, Laureles y Santa Elena presentan efectos positivos frente al barrio de referencia.
 
@@ -356,8 +356,8 @@ Las pruebas LM ayudan a seleccionar la forma de dependencia:
 
 Resultados robustos:
 
-- LM-Lag robusto: 1.598,84; `p < 0.001`.
-- LM-Error robusto: 11.361,18; `p < 0.001`.
+- LM-Lag robusto: 1.265,36; `p < 0.001`.
+- LM-Error robusto: 5.946,71; `p < 0.001`.
 
 Ambas alternativas son relevantes, pero la evidencia inicial es más fuerte para SEM. Por eso se ajustaron los dos modelos.
 
@@ -392,10 +392,9 @@ $\lambda$ mide la intensidad de esa dependencia. Un valor positivo alto signific
 
 ## 10.2 Resultado
 
-- $\lambda=0,7363$; `p < 0.001`.
-- Pseudo-R²: 0,5783.
-- RMSE de ajuste: 0,4832.
-- Moran del residuo filtrado: $I=-0,0007$; `p = 0.288`.
+- $\lambda=0,7351$; `p < 0.001`.
+- Pseudo-R²: 0,5773.
+- Moran del residuo filtrado: $I=-0,0013$; `p = 0.243`.
 
 El residuo correcto para diagnosticar SEM es `e_filtered`, porque ya se retiró el componente espacial $\lambda Wu$. El residuo `u` todavía contiene la dependencia que el modelo busca representar.
 
@@ -427,19 +426,18 @@ Por eso los coeficientes de SAR-Lag no deben interpretarse solos como en OLS.
 
 Para baños, el modelo obtuvo aproximadamente:
 
-- Efecto directo: 0,2514.
-- Efecto indirecto: 0,2502.
-- Efecto total: 0,5016.
+- Efecto directo: 0,2517.
+- Efecto indirecto: 0,3071.
+- Efecto total: 0,5588.
 
 Como baños está estandarizado y el precio está en logaritmo, esto describe una asociación relativa por una desviación estándar, no el aumento literal causado por agregar un baño.
 
 ## 11.3 Resultado
 
-- $\rho=0,4989$; `p < 0.001`.
+- $\rho=0,5496$; `p < 0.001`.
 - Pseudo-R²: 0,6749.
-- Pseudo-R² espacial: 0,6029.
-- RMSE de ajuste: 0,4209.
-- Moran residual: $I=0,0567$; `p = 0.001`.
+- Pseudo-R² espacial: 0,6045.
+- Moran residual: $I=0,0353$; `p = 0.001`.
 
 SAR-Lag mejora claramente el ajuste frente a OLS y SEM. Sin embargo, deja una autocorrelación residual pequeña pero significativa, por lo que no representa toda la dependencia espacial.
 
@@ -447,13 +445,13 @@ SAR-Lag mejora claramente el ajuste frente a OLS y SEM. Sin embargo, deja una au
 
 ## 12. Comparación final
 
-### 12.1 Modelos estadísticos sobre la muestra completa
+### 12.1 Modelos estadísticos sobre entrenamiento
 
 | Modelo | R² o pseudo-R² | RMSE log | Moran residual | p de Moran | Parámetro espacial |
 |---|---:|---:|---:|---:|---:|
-| OLS | 0,5861 | 0,4745 | 0,2673 | 0,001 | No aplica |
-| SEM | 0,5783 | 0,4832 | **-0,0007** | **0,288** | $\lambda=0,7363$ |
-| SAR-Lag | **0,6749** | **0,4209** | 0,0567 | 0,001 | $\rho=0,4989$ |
+| OLS | 0,5870 | 0,4745 | 0,2461 | 0,001 | No aplica |
+| SEM | 0,5773 | No reportado | **-0,0013** | **0,243** | $\lambda=0,7351$ |
+| SAR-Lag | **0,6749** | No reportado | 0,0353 | 0,001 | $\rho=0,5496$ |
 
 Interpretación:
 
@@ -462,15 +460,15 @@ Interpretación:
 
 ### 12.2 Comparación general sobre el mismo conjunto de prueba
 
-Para comparar capacidad predictiva, OLS, SEM y SAR-Lag se entrenaron nuevamente usando solo el 70 % de entrenamiento. Los cinco modelos se evaluaron sobre las mismas 10.745 viviendas de prueba y en escala `log_price`.
+Los modelos se ajustaron una sola vez usando el 70 % de entrenamiento. Los cinco se evaluaron sobre las mismas 10.745 viviendas de prueba y en escala `log_price`.
 
 | Modelo | R² log | RMSE log | Moran residual |
 |---|---:|---:|---:|
 | OLS | 0,5828 | 0,4752 | 0,1926 |
 | SEM | 0,5649 | 0,4853 | 0,2437 |
 | SAR-Lag | 0,5997 | 0,4655 | 0,1753 |
-| Random Forest | **0,7767** | **0,3477** | **0,0296** |
-| XGBoost | 0,5373 | 0,5004 | 0,0698 |
+| Random Forest | **0,7756** | **0,3485** | **0,0293** |
+| XGBoost | 0,5944 | 0,4686 | 0,0790 |
 
 La lectura correcta es:
 

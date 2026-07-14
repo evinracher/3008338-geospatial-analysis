@@ -6,7 +6,7 @@ En este proyecto se busca predecir el precio de un inmueble en Medellín, basado
 
 La implementación de este proyecto se realizón en Python, llevando a cabo el procesamiento de datos del dataset, limpiando y filtrando los datos que no servían para el proyecto. Se realizó la normalización de los datos, la imputación y se manejaron algunos outliers en el precio. Luego se dividió el dataset en datos de entrenamiento y prueba y se  probaron varios modelos bases sin optimizar. Esto permitió mirar el desempeño de los modelos y hacer algunos ajustes. Posteriormente se optimizaron los parametros de algunos modelos usando para esto Grid Search y finalmente se compararon los modelos en el dataset de prueba.
 
-Se evaluaron los modelos: Regresión lineal, Árbol de decisión, Random Forest, XGBoost y redes neuronales.
+Se evaluaron Random Forest y XGBoost como modelos de aprendizaje automático, OLS como referencia estadística y dos modelos de regresión espacial: SEM y SAR-Lag. Todos se ajustaron con el conjunto de entrenamiento y se compararon sobre el mismo conjunto de prueba.
 
 # Base de datos
 
@@ -18,17 +18,19 @@ Se hizo procesamiento de datos y descartaron columnas que no eran relevantes par
 
 # Resultados
 
-TODO
+El precio logarítmico presenta autocorrelación espacial positiva y significativa. En entrenamiento, el I de Moran varía entre 0,6254 con 5 vecinos y 0,5553 con 20 vecinos (`p = 0.001`), lo que evidencia agrupaciones locales de precios semejantes.
+
+OLS obtuvo R² = 0,5870, pero dejó autocorrelación residual importante (I = 0,2461). SEM estimó una dependencia fuerte en el error ($\lambda=0,7351$) y eliminó la autocorrelación del residuo filtrado (I = -0,0013; `p = 0.243`). SAR-Lag estimó una asociación positiva entre precios vecinos ($\rho=0,5496$), alcanzó pseudo-R² = 0,6749 y redujo el Moran residual a 0,0353 durante el ajuste.
+
+En prueba, SAR-Lag fue el mejor modelo estadístico, con R² = 0,5997 y RMSE = 0,4655 en `log_price`. Random Forest obtuvo el mejor desempeño general, con R² = 0,7756 y RMSE = 0,3485.
 
 # Conclusiones
 
-Brevemente presente las conclusiones de su proyecto
+El precio de la vivienda en Medellín no se distribuye aleatoriamente: existe una estructura espacial fuerte que permanece parcialmente sin explicar en una regresión convencional. SEM muestra que una parte sustancial de esa dependencia corresponde a factores espaciales omitidos, como accesibilidad, seguridad o calidad urbana. SAR-Lag muestra además una relación positiva entre precios vecinos y efectos indirectos transmitidos por la red espacial.
 
-Se evidenció que los resultados en la fase de prueba con el dataset de prueba fueron ligeramente menores a los resultados del entrenamiento. Esto puede ser el resultado de la calidad de los datos disponibles en el dataset para entrenar el modelo, los cuales tenían algunas características faltantes para gran parte de los registros. Sin embargo, en general algunos modelos obtuvieron métricas aceptables, como el caso del Random Forest, con un R2 Score DEEEEEE:  y un ERROR TÍPICO MEDIO DEEEEE. Estos resultados son satisfactorios para un proyecto de este tipo, donde se buscó un dataset cercano a la realidad. En proyectos con datasets academicos suelen obtenerse mejores resultados pero esto se debe en parte porque los datos están curados y optimizados para demostrar los modelos que se usan.
+No existe un modelo único superior para todos los objetivos. SEM es el más adecuado para representar y corregir la dependencia espacial de los errores durante el ajuste. SAR-Lag es el mejor modelo estadístico para predicción fuera de muestra y permite interpretar efectos directos e indirectos. Random Forest continúa siendo la opción más precisa cuando el objetivo principal es la predicción.
 
-De la naturaleza de los datos a usar, resulta interesante que el número de baños sea la característica con mayor correlación con el precio. Se esperaba que fuera el area total o la ubicación. Esto se puede deber a que el area total faltaba en gran parte de los registros y que los modelos usados no eran modelos espaciales que le dieran un peso mayor a la ubicación o que tuvieran en cuenta la relación entre la ubicación de los registros y sus caracteristicas. Un trabajo a futuro interesante sería probar con modelos espaciales y ver que tanta importancia podría aportar la ubicación al precio del inmueble.
-
-En este proyecto de aprendizaje de máquinas se pudo comprobar que gran parte del trabajo en la aplicación de modelos reside en la parte de procesamiento de datos. Analizar, limpiar, extraer, filtrar los datos representa gran parte del proceso y puede tener un gran efecto en los resultados si no se hace adecuadamente.
+La principal limitación de los datos es el alto porcentaje de valores faltantes en las variables de área y la ausencia de características urbanas externas. Una etapa posterior debería incorporar estas variables y aplicar validación espacial por bloques.
 
 # Referencias
 
