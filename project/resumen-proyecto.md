@@ -2,6 +2,16 @@
 
 Este documento resume el trabajo desarrollado en [`house-price-medellin.ipynb`](house-price-medellin.ipynb) y explica los conceptos necesarios para entenderlo sin conocimientos previos de análisis geoespacial. La metodología espacial sigue principalmente los capítulos del `Libro_AnalisisGeoespacial` sobre datos espaciales, matrices de pesos, autocorrelación y regresión espacial.
 
+## Resumen ejecutivo
+
+Este proyecto analiza y predice el precio de venta de vivienda en Medellín mediante modelos de aprendizaje automático y regresión espacial. Después de limpiar los anuncios inmobiliarios, el conjunto analítico quedó compuesto por 35.814 observaciones, divididas aleatoriamente en 25.069 para entrenamiento y 10.745 para prueba. Todos los modelos se ajustaron exclusivamente con entrenamiento y se evaluaron sobre las mismas observaciones de prueba.
+
+La dependencia espacial se representó mediante matrices KNN estandarizadas por filas. El precio logarítmico presentó autocorrelación positiva y significativa para 5, 10 y 20 vecinos; con 20 vecinos, el I de Moran fue 0,5553 (`p = 0.001`). Esto demuestra que las viviendas con precios semejantes tienden a agruparse y que la localización contiene información que no se reduce a latitud, longitud o barrio.
+
+OLS explicó el 58,70 % de la variación del precio logarítmico, pero dejó autocorrelación residual importante (I = 0,2461). Las pruebas LM-Lag y LM-Error, incluidas sus versiones robustas, fueron significativas, con evidencia más fuerte para dependencia en el error. SEM estimó $\lambda=0,7351$ y produjo un residuo filtrado sin autocorrelación significativa (I = -0,0013; `p = 0.243`), lo que respalda la presencia de factores espaciales omitidos. SAR-Lag estimó $\rho=0,5496$, alcanzó pseudo-R² = 0,6749 y evidenció efectos indirectos entre viviendas conectadas por la matriz espacial.
+
+En prueba, SAR-Lag fue el mejor modelo estadístico, con R² = 0,5997 y RMSE = 0,4655 en `log_price`; superó a OLS y SEM, aunque conservó dependencia residual. Random Forest obtuvo el mejor desempeño general, con R² = 0,7756 y RMSE = 0,3485. Los resultados muestran que SEM es más adecuado para representar la dependencia de factores no observados, SAR-Lag para una predicción espacial interpretable y Random Forest para maximizar la precisión predictiva.
+
 ## 1. La idea central en un minuto
 
 El proyecto busca explicar y predecir el precio de venta de un inmueble en Medellín usando sus características y ubicación.
@@ -83,6 +93,8 @@ El dataset se dividió aleatoriamente en:
 
 - 70 % para entrenamiento.
 - 30 % para prueba.
+
+Esto corresponde a 25.069 y 10.745 observaciones, respectivamente.
 
 Todos los modelos, incluidos OLS, SEM y SAR-Lag, se ajustaron con entrenamiento y se evaluaron sobre el mismo conjunto de prueba.
 
@@ -456,7 +468,7 @@ SAR-Lag mejora claramente el ajuste frente a OLS y SEM. Sin embargo, deja una au
 Interpretación:
 
 - **SEM es preferible para explicar la dependencia residual**, porque deja errores compatibles con aleatoriedad espacial.
-- **SAR-Lag es preferible por ajuste**, porque obtiene mayor pseudo-R² y menor RMSE entre los modelos estadísticos.
+- **SAR-Lag es preferible por ajuste dentro de entrenamiento**, porque obtiene el mayor pseudo-R². `GM_Lag` y `GM_Error_Het` no reportan un RMSE directamente comparable en sus resúmenes, por lo que la capacidad predictiva se decide con las métricas comunes de prueba.
 
 ### 12.2 Comparación general sobre el mismo conjunto de prueba
 
@@ -658,12 +670,14 @@ Idea que debe quedar: un modelo puede predecir bien y ser poco interpretable, o 
 
 ## 19. Síntesis final
 
-El proyecto demuestra que el precio de vivienda en Medellín no se distribuye aleatoriamente en el espacio. La cercanía aporta información y debe formar parte del análisis.
+El proyecto demuestra que el precio de vivienda en Medellín no se distribuye aleatoriamente. El I de Moran de `log_price` con 20 vecinos fue 0,5553 (`p = 0.001`), mientras OLS dejó un I residual de 0,2461. Por tanto, las características observadas no explican por sí solas la organización geográfica del mercado.
 
-- Moran confirmó una agrupación fuerte de precios similares.
-- OLS dejó dependencia espacial importante.
-- SEM identificó una dependencia fuerte en factores espaciales omitidos y produjo residuos espacialmente aleatorios.
-- SAR-Lag confirmó una asociación entre precios vecinos y mejoró el ajuste estadístico.
-- Random Forest aprovechó eficazmente la ubicación y obtuvo la mejor predicción en prueba.
+SEM encontró una dependencia fuerte en los errores ($\lambda=0,7351$) y eliminó su autocorrelación después del filtrado. Esto es compatible con la existencia de condiciones urbanas omitidas que cambian de forma agrupada en el espacio. SAR-Lag identificó una relación positiva entre precios vecinos ($\rho=0,5496$) y efectos de desbordamiento; además, fue el mejor modelo estadístico en prueba.
 
-La lección general es que el análisis espacial no consiste solamente en agregar latitud y longitud a un modelo. Requiere definir vecindad, medir dependencia, diagnosticar residuos y escoger una estructura espacial coherente con el proceso que se quiere estudiar.
+La elección final depende del objetivo:
+
+- **Explicar y corregir la dependencia espacial de los errores:** SEM.
+- **Predecir con una estructura espacial explícita e interpretable:** SAR-Lag.
+- **Obtener la mayor precisión predictiva disponible:** Random Forest.
+
+La lección general es que incorporar ubicación no consiste solamente en agregar latitud y longitud. El análisis requiere definir formalmente la vecindad, medir autocorrelación, diagnosticar residuos y seleccionar un mecanismo espacial coherente con la pregunta de investigación.
