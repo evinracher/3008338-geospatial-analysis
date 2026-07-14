@@ -603,7 +603,6 @@ Idea que debe quedar: un modelo puede predecir bien y ser poco interpretable, o 
 
 | Concepto | Definición breve |
 |---|---|
-| ML (*Machine Learning*) | Aprendizaje automático; métodos que aprenden patrones a partir de datos para hacer predicciones sin programar cada regla de manera explícita. |
 | Atributo espacial | Característica asociada con una geometría, como el precio o el número de baños de una vivienda. |
 | Autocorrelación espacial | Relación entre la similitud de los valores y la cercanía de sus ubicaciones. |
 | Coeficiente de determinación (R²) | Proporción de la variación observada que explica el modelo. Un valor mayor suele indicar mejor ajuste, si se comparan modelos sobre los mismos datos y la misma variable objetivo. |
@@ -612,7 +611,6 @@ Idea que debe quedar: un modelo puede predecir bien y ser poco interpretable, o 
 | Efecto directo | Cambio que una variable produce sobre la misma observación dentro de un modelo espacial. |
 | Efecto indirecto | Cambio transmitido hacia otras observaciones mediante la red de vecindad; también se denomina efecto de desbordamiento. |
 | EPSG (*European Petroleum Survey Group*) | Catálogo de códigos que identifica sistemas de referencia y proyecciones de forma estandarizada. |
-| MAE (*Mean Absolute Error*) | Error Absoluto Medio; promedio del valor absoluto de los errores, que expresa el tamaño típico del error sin elevarlo al cuadrado. |
 | Estandarización | Transformación que centra una variable y la expresa en unidades de desviación estándar. |
 | GeoDataFrame | Tabla que incorpora una geometría y un CRS para realizar operaciones espaciales. |
 | Geometría | Representación espacial de un objeto como punto, línea o polígono. En este proyecto, cada vivienda es un punto. |
@@ -623,28 +621,30 @@ Idea que debe quedar: un modelo puede predecir bien y ser poco interpretable, o 
 | Imputación | Sustitución de datos faltantes mediante una regla, como la mediana de la variable. |
 | KNN (*K-Nearest Neighbors*) | K vecinos más cercanos; método que define como vecinas las $k$ observaciones con menor distancia. |
 | LISA (*Local Indicators of Spatial Association*) | Indicadores Locales de Asociación Espacial; permiten localizar agrupaciones y valores atípicos espaciales. |
+| LM (*Lagrange Multipliers*) | Multiplicadores de Lagrange; pruebas de diagnóstico que ayudan a identificar dependencia espacial de tipo rezago o error. |
 | Logaritmo del precio | Transformación que reduce la asimetría y permite representar diferencias relativas de precio. |
+| MAE (*Mean Absolute Error*) | Error Absoluto Medio; promedio del valor absoluto de los errores, que expresa el tamaño típico del error sin elevarlo al cuadrado. |
 | MAGNA-SIRGAS (Marco Geocéntrico Nacional de Referencia — Sistema de Referencia Geocéntrico para las Américas) | Marco de referencia geodésico utilizado en Colombia para expresar ubicaciones de manera precisa. |
 | Matriz de pesos espaciales ($W$) | Representación matemática de las relaciones de vecindad y de la intensidad asignada a cada relación. |
 | MGWR (*Multiscale Geographically Weighted Regression*) | Regresión Geográficamente Ponderada Multiescala; permite que cada variable actúe a una escala espacial diferente. |
-| LM (*Lagrange Multipliers*) | Multiplicadores de Lagrange; pruebas de diagnóstico que ayudan a identificar dependencia espacial de tipo rezago o error. |
+| ML (*Machine Learning*) | Aprendizaje automático; métodos que aprenden patrones a partir de datos para hacer predicciones sin programar cada regla de manera explícita. |
 | OLS (*Ordinary Least Squares*) | Mínimos Cuadrados Ordinarios; regresión lineal global que no incorpora dependencia espacial explícita. |
 | Parámetro $\lambda$ | Intensidad de la dependencia espacial de los errores en SEM. |
 | Parámetro $\rho$ | Intensidad de la relación con el rezago de la variable dependiente en SAR-Lag. |
 | Permutación | Redistribución aleatoria de los valores entre ubicaciones para construir una referencia sin patrón espacial. |
 | Pseudo-R² | Medida de ajuste reportada por algunos modelos espaciales; es útil para comparar especificaciones compatibles, pero no es idéntica al R² de OLS. |
-| RMSE (*Root Mean Squared Error*) | Raíz del Error Cuadrático Medio; penaliza con mayor fuerza los errores grandes. |
 | Reproyección | Conversión entre sistemas de coordenadas sin cambiar la ubicación real del objeto. |
 | Residuo | Diferencia entre el valor observado y el valor ajustado o predicho por el modelo. |
 | Rezago espacial ($Wy$) | Combinación ponderada, normalmente un promedio, de los valores observados en los vecinos. |
+| RMSE (*Root Mean Squared Error*) | Raíz del Error Cuadrático Medio; penaliza con mayor fuerza los errores grandes. |
 | SAR-Lag (*Spatial Autoregressive Lag Model*) | Modelo Autorregresivo Espacial con rezago; incorpora el rezago espacial de la variable dependiente. |
 | SDM (*Spatial Durbin Model*) | Modelo Espacial de Durbin; combina rezagos espaciales de la variable dependiente y de las explicativas. |
 | SEM (*Spatial Error Model*) | Modelo de Error Espacial; representa dependencia espacial en factores no observados contenidos en el error. |
 | Significancia estadística | Evidencia de que el resultado observado sería poco compatible con una distribución espacial aleatoria bajo la hipótesis nula. |
 | SLX (*Spatial Lag of X Model*) | Modelo de Rezago Espacial de X; incorpora los valores vecinos de las variables explicativas. |
-| Valor p | Medida usada para contrastar la hipótesis nula. Un valor pequeño aporta evidencia contra ella, pero no mide la magnitud ni la importancia práctica del efecto. |
 | Validación cruzada | Evaluación repetida con distintas divisiones de los datos de entrenamiento para seleccionar configuraciones de un modelo. |
 | Validación espacial por bloques | Separación geográfica de entrenamiento y prueba para evaluar la capacidad de generalizar a zonas no observadas. |
+| Valor p | Medida usada para contrastar la hipótesis nula. Un valor pequeño aporta evidencia contra ella, pero no mide la magnitud ni la importancia práctica del efecto. |
 | WGS 84 (*World Geodetic System 1984*) | Sistema Geodésico Mundial 1984; sistema global de longitud y latitud usado por `EPSG:4326`. |
 | XGBoost (*Extreme Gradient Boosting*) | Modelo de árboles secuenciales que corrige progresivamente los errores anteriores. |
 
