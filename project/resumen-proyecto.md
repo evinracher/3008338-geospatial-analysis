@@ -14,12 +14,12 @@ El flujo aplicado fue:
 
 1. Descargar, filtrar y limpiar los datos.
 2. Preparar variables numéricas y categóricas.
-3. Entrenar Random Forest y XGBoost como modelos predictivos.
+3. Entrenar Random Forest y XGBoost (*Extreme Gradient Boosting*) como modelos predictivos.
 4. Convertir las viviendas en puntos geográficos.
-5. Definir cuáles viviendas son vecinas mediante KNN.
-6. comprobar si los precios cercanos tienden a parecerse usando el I de Moran.
+5. Definir cuáles viviendas son vecinas mediante KNN (*K-Nearest Neighbors*, o k vecinos más cercanos).
+6. Comprobar si los precios cercanos tienden a parecerse usando el I de Moran.
 7. Comprobar si los modelos dejan errores agrupados espacialmente.
-8. Ajustar OLS, SEM y SAR-Lag para representar explícitamente la dependencia espacial.
+8. Ajustar OLS (*Ordinary Least Squares*, o Mínimos Cuadrados Ordinarios), SEM (*Spatial Error Model*, o Modelo de Error Espacial) y SAR-Lag (*Spatial Autoregressive Lag Model*, o Modelo Autorregresivo Espacial con rezago) para representar explícitamente la dependencia espacial.
 9. Comparar capacidad de ajuste, predicción y autocorrelación residual.
 
 El resultado principal es que los precios presentan una estructura espacial fuerte. SEM logra representar completamente la dependencia residual, SAR-Lag obtiene el mejor ajuste entre los modelos estadísticos y Random Forest mantiene el mejor desempeño predictivo en el conjunto de prueba.
@@ -39,7 +39,7 @@ La variable objetivo es el precio de venta de los inmuebles en Medellín. Las va
 
 Las preguntas del proyecto son:
 
-1. ¿Qué tan bien puede predecirse el precio con modelos de Machine Learning?
+1. ¿Qué tan bien puede predecirse el precio con modelos de ML (*Machine Learning*, o aprendizaje automático)?
 2. ¿Los precios presentan un patrón espacial?
 3. ¿Los modelos convencionales dejan errores espacialmente relacionados?
 4. ¿La dependencia se representa mejor como relación entre precios vecinos o como factores espaciales omitidos?
@@ -67,7 +67,7 @@ El precio final se encuentra entre 82 millones y 4.200 millones de pesos, con me
 
 ### 3.3 Datos faltantes
 
-Las variables de área tienen cerca del 96 % de valores faltantes. En los modelos de Machine Learning se conservaron mediante imputación, pero fueron excluidas de las regresiones espaciales porque contienen muy poca información observada.
+Las variables de área tienen cerca del 96 % de valores faltantes. En los modelos de ML se conservaron mediante imputación, pero fueron excluidas de las regresiones espaciales porque contienen muy poca información observada.
 
 Para el resto de variables se aplicó:
 
@@ -88,7 +88,7 @@ El conjunto de prueba se usó al final para medir la capacidad predictiva de Ran
 
 ---
 
-## 4. Modelos de Machine Learning
+## 4. Modelos de aprendizaje automático
 
 ### 4.1 Random Forest
 
@@ -101,6 +101,8 @@ XGBoost construye árboles secuencialmente. Cada árbol nuevo intenta corregir l
 ### 4.3 Optimización
 
 Ambos modelos se ajustaron inicialmente con parámetros base y luego se optimizaron mediante `GridSearchCV`. Esta técnica evalúa distintas combinaciones de hiperparámetros usando validación cruzada.
+
+Las métricas usadas fueron MAE (*Mean Absolute Error*, o Error Absoluto Medio), RMSE (*Root Mean Squared Error*, o Raíz del Error Cuadrático Medio) y R² (coeficiente de determinación).
 
 ### 4.4 Resultados sobre el precio original
 
@@ -140,7 +142,7 @@ Son conceptos distintos:
 - **Dependencia espacial:** el valor de una observación se relaciona con los valores o errores de sus vecinas.
 - **Heterogeneidad espacial:** la relación entre variables cambia según el lugar. Por ejemplo, un baño adicional podría asociarse con aumentos diferentes de precio en distintas zonas.
 
-SEM y SAR-Lag modelan principalmente dependencia. GWR y MGWR, propuestos para una etapa futura, modelan heterogeneidad mediante coeficientes locales.
+SEM y SAR-Lag modelan principalmente dependencia. GWR (*Geographically Weighted Regression*, o Regresión Geográficamente Ponderada) y MGWR (*Multiscale Geographically Weighted Regression*, o Regresión Geográficamente Ponderada Multiescala), propuestas para una etapa futura, modelan heterogeneidad mediante coeficientes locales.
 
 ## 5.3 GeoDataFrame
 
@@ -148,22 +150,22 @@ Un `DataFrame` contiene filas y columnas. Un `GeoDataFrame` añade una columna `
 
 Las columnas `lon` y `lat` se transformaron en puntos usando GeoPandas.
 
-## 5.4 CRS y reproyección
+## 5.4 CRS (sistema de referencia de coordenadas) y reproyección
 
-Un **CRS** indica cómo interpretar las coordenadas.
+Un CRS (*Coordinate Reference System*) indica cómo interpretar las coordenadas.
 
-- `EPSG:4326`, WGS 84, representa longitud y latitud en grados. Es adecuado para almacenar y visualizar ubicaciones globales.
-- `EPSG:9377`, MAGNA-SIRGAS / Origen-Nacional, representa coordenadas colombianas en metros.
+- El código `EPSG:4326` del catálogo EPSG (*European Petroleum Survey Group*) corresponde a WGS 84 (*World Geodetic System 1984*, o Sistema Geodésico Mundial 1984). Representa longitud y latitud en grados y es adecuado para almacenar y visualizar ubicaciones globales.
+- `EPSG:9377` corresponde a MAGNA-SIRGAS (Marco Geocéntrico Nacional de Referencia, basado en el Sistema de Referencia Geocéntrico para las Américas), con proyección Origen-Nacional. Representa coordenadas colombianas en metros.
 
 La reproyección no mueve las viviendas. Solo cambia la forma matemática de expresar su ubicación. Se necesita un CRS métrico porque KNN calcula distancias y los grados no son una unidad constante de longitud.
 
 ## 5.5 Transformación logarítmica del precio
 
-Los precios presentan asimetría: existen muchas viviendas de precio medio y pocas extremadamente costosas. Se creó:
+Los precios presentan asimetría: existen muchas viviendas de precio medio y pocas extremadamente costosas. Se creó la variable transformada:
 
-$$
-\text{log\_price}=\log(\text{price})
-$$
+```text
+log_price = log(price)
+```
 
 El logaritmo:
 
@@ -267,7 +269,7 @@ Los cuadrantes principales son:
 - Alto-Bajo: valor alto rodeado de bajos.
 - Bajo-Alto: valor bajo rodeado de altos.
 
-El gráfico global identifica una tendencia general. Para localizar agrupaciones específicas se usaría LISA, que quedó como extensión opcional.
+El gráfico global identifica una tendencia general. Para localizar agrupaciones específicas se usarían los LISA (*Local Indicators of Spatial Association*, o Indicadores Locales de Asociación Espacial), que quedaron como extensión opcional.
 
 ## 7.4 Resultados del precio
 
@@ -344,9 +346,9 @@ OLS explica cerca del 59 % de la variación, pero deja una dependencia espacial 
 
 Estos coeficientes describen asociaciones, no efectos causales. Además, las variables numéricas fueron estandarizadas; por eso sus coeficientes representan cambios por desviación estándar y no directamente por una unidad física.
 
-## 9.4 Diagnósticos LM
+## 9.4 Diagnósticos LM (Multiplicadores de Lagrange)
 
-Las pruebas de Multiplicadores de Lagrange ayudan a seleccionar la forma de dependencia:
+Las pruebas LM ayudan a seleccionar la forma de dependencia:
 
 - **LM-Lag:** evalúa dependencia en la variable objetivo.
 - **LM-Error:** evalúa dependencia en los errores.
@@ -458,24 +460,24 @@ Interpretación:
 - **SEM es preferible para explicar la dependencia residual**, porque deja errores compatibles con aleatoriedad espacial.
 - **SAR-Lag es preferible por ajuste**, porque obtiene mayor pseudo-R² y menor RMSE entre los modelos estadísticos.
 
-### 12.2 Comparación general
+### 12.2 Comparación general sobre el mismo conjunto de prueba
 
-| Modelo | Tipo de evaluación | R² log | RMSE log | Moran residual |
-|---|---|---:|---:|---:|
-| OLS | Ajuste completo | 0,5861 | 0,4745 | 0,2673 |
-| SEM | Ajuste completo | 0,5783 | 0,4832 | -0,0007 |
-| SAR-Lag | Ajuste completo | 0,6749 | 0,4209 | 0,0567 |
-| Random Forest | Prueba | **0,7767** | **0,3477** | 0,0296 |
-| XGBoost | Prueba | 0,5373 | 0,5004 | 0,0698 |
+Para comparar capacidad predictiva, OLS, SEM y SAR-Lag se entrenaron nuevamente usando solo el 70 % de entrenamiento. Los cinco modelos se evaluaron sobre las mismas 10.745 viviendas de prueba y en escala `log_price`.
 
-Esta tabla usa una escala común, pero no constituye una competencia completamente justa: los modelos estadísticos muestran ajuste sobre toda la muestra y Machine Learning muestra predicción en datos de prueba.
+| Modelo | R² log | RMSE log | Moran residual |
+|---|---:|---:|---:|
+| OLS | 0,5828 | 0,4752 | 0,1926 |
+| SEM | 0,5649 | 0,4853 | 0,2437 |
+| SAR-Lag | 0,5997 | 0,4655 | 0,1753 |
+| Random Forest | **0,7767** | **0,3477** | **0,0296** |
+| XGBoost | 0,5373 | 0,5004 | 0,0698 |
 
 La lectura correcta es:
 
-- Random Forest es el mejor predictor disponible.
-- SEM explica mejor la dependencia de los errores.
-- SAR-Lag ofrece el mejor ajuste estadístico global.
-- No existe un único “mejor modelo” sin definir primero si el objetivo es predecir, explicar o corregir dependencia espacial.
+- Random Forest es el mejor predictor disponible y deja la menor dependencia residual.
+- SAR-Lag es el mejor predictor entre los modelos estadísticos.
+- SEM explica y filtra la dependencia de los errores observados durante el ajuste, pero ese error espacial no puede anticiparse directamente para viviendas nuevas usando solo sus atributos.
+- El mejor modelo depende de si el objetivo es predecir, explicar o corregir dependencia espacial.
 
 ---
 
@@ -503,7 +505,7 @@ Que baños y precio estén asociados no prueba que agregar un baño cause exacta
 2. No se incorporaron variables externas de seguridad, accesibilidad, transporte o equipamientos.
 3. Muchos anuncios comparten coordenadas, aunque los identificadores originales son únicos. Esto puede reflejar edificios, ubicaciones aproximadas o republicaciones.
 4. La partición de Machine Learning es aleatoria y no una validación espacial por bloques.
-5. SEM y SAR-Lag se evaluaron como ajuste sobre la muestra completa, no como predicción espacial fuera de muestra.
+5. La comparación predictiva usa una partición aleatoria. En SAR-Lag, la predicción de prueba utiliza la red KNN formada por las ubicaciones de prueba; una validación espacial por bloques sería una evaluación más exigente.
 6. La matriz KNN es una aproximación del mercado inmobiliario; otras definiciones de vecindad podrían cambiar los resultados.
 7. Los resultados son asociaciones estadísticas y no estimaciones causales.
 
@@ -517,10 +519,10 @@ Estas limitaciones no invalidan el análisis, pero delimitan el alcance de sus c
 
 Separar entrenamiento y prueba por zonas geográficas permitiría evaluar si el modelo generaliza a sectores no observados y reduciría la similitud espacial entre ambos conjuntos.
 
-### 15.2 SLX y SDM
+### 15.2 SLX (rezago espacial de X) y SDM (Modelo Espacial de Durbin)
 
-- **SLX:** incorpora rezagos espaciales de las variables explicativas, $WX$.
-- **SDM:** combina $Wy$ y $WX$.
+- El modelo SLX (*Spatial Lag of X*) incorpora rezagos espaciales de las variables explicativas, $WX$.
+- El modelo SDM (*Spatial Durbin Model*) combina $Wy$ y $WX$.
 
 Las pruebas Spatial Durbin del OLS fueron significativas, por lo que estas extensiones tienen fundamento estadístico.
 
@@ -597,26 +599,53 @@ Idea que debe quedar: un modelo puede predecir bien y ser poco interpretable, o 
 
 ---
 
-## 17. Glosario mínimo
+## 17. Glosario de términos y siglas
 
 | Concepto | Definición breve |
 |---|---|
-| CRS | Regla para interpretar coordenadas. |
-| Reproyección | Conversión entre sistemas de coordenadas sin mover el objeto real. |
-| GeoDataFrame | Tabla con geometría y CRS. |
-| Matriz $W$ | Representación matemática de la vecindad. |
-| KNN | Selección de los $k$ puntos más cercanos. |
-| Rezago espacial | Promedio o combinación ponderada de valores vecinos. |
-| Autocorrelación | Relación entre similitud de valores y cercanía. |
-| I de Moran | Medida global de autocorrelación espacial. |
-| Residuo | Diferencia entre valor observado y ajustado. |
-| OLS | Regresión lineal global sin dependencia espacial explícita. |
-| SEM | Modelo con dependencia espacial en los errores. |
-| SAR-Lag | Modelo con rezago espacial de la variable dependiente. |
-| $\lambda$ | Intensidad de la dependencia espacial del error. |
-| $\rho$ | Intensidad de la dependencia espacial de la variable objetivo. |
-| LISA | Indicador local que identifica agrupaciones específicas. |
-| GWR | Regresión cuyos coeficientes cambian geográficamente. |
+| Aprendizaje automático (ML) | Métodos que aprenden patrones a partir de datos para hacer predicciones sin programar cada regla de manera explícita. |
+| Atributo espacial | Característica asociada con una geometría, como el precio o el número de baños de una vivienda. |
+| Autocorrelación espacial | Relación entre la similitud de los valores y la cercanía de sus ubicaciones. |
+| Coeficiente de determinación (R²) | Proporción de la variación observada que explica el modelo. Un valor mayor suele indicar mejor ajuste, si se comparan modelos sobre los mismos datos y la misma variable objetivo. |
+| CRS | Sistema de referencia de coordenadas; regla que permite interpretar la posición y las unidades de unas coordenadas. |
+| Dependencia espacial | Situación en la que una observación se relaciona con valores o errores de observaciones vecinas. |
+| Efecto directo | Cambio que una variable produce sobre la misma observación dentro de un modelo espacial. |
+| Efecto indirecto | Cambio transmitido hacia otras observaciones mediante la red de vecindad; también se denomina efecto de desbordamiento. |
+| EPSG | Catálogo de códigos que identifica sistemas de referencia y proyecciones de forma estandarizada. |
+| Error Absoluto Medio (MAE) | Promedio del valor absoluto de los errores; expresa el tamaño típico del error sin elevarlo al cuadrado. |
+| Estandarización | Transformación que centra una variable y la expresa en unidades de desviación estándar. |
+| GeoDataFrame | Tabla que incorpora una geometría y un CRS para realizar operaciones espaciales. |
+| Geometría | Representación espacial de un objeto como punto, línea o polígono. En este proyecto, cada vivienda es un punto. |
+| GWR | Regresión Geográficamente Ponderada; estima coeficientes que pueden cambiar de un lugar a otro. |
+| Heterogeneidad espacial | Variación geográfica de las relaciones entre las variables. |
+| Hiperparámetro | Configuración definida antes del entrenamiento que controla cómo aprende un modelo. |
+| I de Moran | Estadístico que mide autocorrelación espacial global. Un valor positivo indica agrupación de valores similares. |
+| Imputación | Sustitución de datos faltantes mediante una regla, como la mediana de la variable. |
+| KNN | K vecinos más cercanos; método que define como vecinas las $k$ observaciones con menor distancia. |
+| LISA | Indicadores Locales de Asociación Espacial; permiten localizar agrupaciones y valores atípicos espaciales. |
+| Logaritmo del precio | Transformación que reduce la asimetría y permite representar diferencias relativas de precio. |
+| Matriz de pesos espaciales ($W$) | Representación matemática de las relaciones de vecindad y de la intensidad asignada a cada relación. |
+| MGWR | Regresión Geográficamente Ponderada Multiescala; permite que cada variable actúe a una escala espacial diferente. |
+| Multiplicadores de Lagrange (LM) | Pruebas de diagnóstico que ayudan a identificar dependencia espacial de tipo rezago o error. |
+| OLS | Mínimos Cuadrados Ordinarios; regresión lineal global que no incorpora dependencia espacial explícita. |
+| Parámetro $\lambda$ | Intensidad de la dependencia espacial de los errores en SEM. |
+| Parámetro $\rho$ | Intensidad de la relación con el rezago de la variable dependiente en SAR-Lag. |
+| Permutación | Redistribución aleatoria de los valores entre ubicaciones para construir una referencia sin patrón espacial. |
+| Pseudo-R² | Medida de ajuste reportada por algunos modelos espaciales; es útil para comparar especificaciones compatibles, pero no es idéntica al R² de OLS. |
+| Raíz del Error Cuadrático Medio (RMSE) | Raíz del promedio de los errores al cuadrado; penaliza con mayor fuerza los errores grandes. |
+| Reproyección | Conversión entre sistemas de coordenadas sin cambiar la ubicación real del objeto. |
+| Residuo | Diferencia entre el valor observado y el valor ajustado o predicho por el modelo. |
+| Rezago espacial ($Wy$) | Combinación ponderada, normalmente un promedio, de los valores observados en los vecinos. |
+| SAR-Lag | Modelo Autorregresivo Espacial con rezago; incorpora el rezago espacial de la variable dependiente. |
+| SDM | Modelo Espacial de Durbin; combina rezagos espaciales de la variable dependiente y de las explicativas. |
+| SEM | Modelo de Error Espacial; representa dependencia espacial en factores no observados contenidos en el error. |
+| Significancia estadística | Evidencia de que el resultado observado sería poco compatible con una distribución espacial aleatoria bajo la hipótesis nula. |
+| SLX | Modelo de Rezago Espacial de X; incorpora los valores vecinos de las variables explicativas. |
+| Valor p | Medida usada para contrastar la hipótesis nula. Un valor pequeño aporta evidencia contra ella, pero no mide la magnitud ni la importancia práctica del efecto. |
+| Validación cruzada | Evaluación repetida con distintas divisiones de los datos de entrenamiento para seleccionar configuraciones de un modelo. |
+| Validación espacial por bloques | Separación geográfica de entrenamiento y prueba para evaluar la capacidad de generalizar a zonas no observadas. |
+| WGS 84 | Sistema Geodésico Mundial 1984; sistema global de longitud y latitud usado por `EPSG:4326`. |
+| XGBoost | *Extreme Gradient Boosting*; modelo de árboles secuenciales que corrige progresivamente los errores anteriores. |
 
 ---
 
