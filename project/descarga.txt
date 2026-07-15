@@ -1,8 +1,8 @@
-Presentación:
+# Presentación:
 
 La presentación de la primera entrega está en este enlace:
 
-https://drive.google.com/file/d/1OwSxvU5CvH7BhSTQEtB8LpLMEmsvRByu/view?usp=sharing
+https://gamma.app/docs/Prediccion-espacial-del-precio-de-vivienda-en-Medellin-zq2os8d6l0lya1l
 
 También se encuentra en el repositorio en formato PDF.
 
