@@ -1,8 +1,8 @@
 # Presentación:
 
-La presentación de la primera entrega está en este enlace:
+La presentación en este enlace:
 
-https://gamma.app/docs/Prediccion-espacial-del-precio-de-vivienda-en-Medellin-zq2os8d6l0lya1l
+https://gamma.app/docs/analisis-geoespacial-presentacion-final-6gmerex0vtd7msk
 
 También se encuentra en el repositorio en formato PDF.
 
