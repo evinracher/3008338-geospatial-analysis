@@ -65,13 +65,15 @@ El cluster 1 cubre buena parte del occidente, con Laureles, Los Conquistadores y
 
 El cluster 2 reúne principalmente El Poblado y alcanza $690 millones.
 
-# LISA
+# LISA (Local Indicators of Spatial Association) - Asociación espacial
+
+LISA identifica 29 barrios Alto-Alto: barrios de precio alto junto a otros de precio alto. También encuentra 37 Bajo-Bajo: barrios de precio bajo rodeados por precios bajos. Los cinco Alto-Bajo y el único Bajo-Alto son contrastes locales; 154 barrios no son significativos.
 
 El 23.8 % de las viviendas forma clusters Alto-Alto y el 24.4 % Bajo-Bajo. Esto muestra zonas amplias donde los precios similares se agrupan. Los casos Alto-Bajo (2.1 %) y Bajo-Alto (3.2 %) son viviendas que contrastan con sus vecinos. El 46.4 % no presenta asociación local significativa.
 
 # Analisis espacial por barrios
 
-El Moran es positivo y significativo (`I = 0.4752`, `p = 0.001`). LISA identifica 29 barrios Alto-Alto: barrios de precio alto junto a otros de precio alto. También encuentra 37 Bajo-Bajo: barrios de precio bajo rodeados por precios bajos. Los cinco Alto-Bajo y el único Bajo-Alto son contrastes locales; 154 barrios no son significativos.
+El Moran es positivo y significativo (`I = 0.4752`, `p = 0.001`). 
 
 # Dependencia espacial
 
@@ -152,12 +154,14 @@ En la validación espacial por bloques, Regresión-Kriging es el mejor método c
 
 ## Conclusiones
 
-Los precios de vivienda en Medellín presentan una dependencia espacial clara. Los precios cercanos suelen parecerse más de lo esperado por azar. LISA ubica grupos Alto-Alto principalmente en el sur y suroriente y grupos Bajo-Bajo en sectores del centro-norte y norte.
+La ubicación geográfica sí está relacionada con el precio de las viviendas en Medellín. Los valores más altos se concentran principalmente en el sur y suroriente, especialmente en El Poblado, mientras en varios sectores del centro-norte y norte predominan precios menores. K-means confirma esta diferencia: el grupo localizado principalmente en El Poblado tiene una mediana de $690 millones, frente a $340 millones en buena parte del occidente y $250 millones en sectores centrales y del norte. La ubicación resume condiciones del entorno como accesibilidad, servicios, seguridad, oferta urbana y valoración del barrio.
 
-La distribución de anuncios también influye en el patrón. El centro medio cae en Tenche y el ponderado por precio en Trinidad, separados por solo 65 m. Por eso El Poblado no desplaza el centro general, aunque concentra muchos anuncios caros. K-means sí separa esta zona: el cluster de El Poblado tiene una mediana de $690 millones, frente a $340 millones en el occidente y $250 millones en sectores centrales y del norte.
+También existe dependencia espacial: el precio de una vivienda se relaciona con los precios observados a su alrededor. Los precios de vivienda en Medellín presentan una dependencia espacial clara. Los precios cercanos suelen parecerse más de lo esperado por azar. LISA ubica grupos Alto-Alto en zonas donde viviendas costosas están rodeadas por otras costosas, y grupos Bajo-Bajo donde los precios bajos también se agrupan.
 
-También existe heterogeneidad espacial: la relación entre atributos y precio cambia dentro de Medellín. Con 1.890 puntos, MGWR mejora a GWR y alcanza R² ajustado de `0.6102`. Baños es positivo y significativo en 83.5 % de los puntos; habitaciones, en 54.1 %; dormitorios, apenas en 5.0 %. Los anchos de banda muestran que habitaciones actúa a una escala amplia, mientras el nivel base del precio y el efecto de baños cambian de forma más local.
+La cercanía de los inmuebles vecinos mejora la explicación y la predicción. OLS considera las características de la vivienda, pero deja dependencia en sus residuos (`I = 0.2461`). SEM muestra que existen factores territoriales no incluidos, mientras SAR confirma una relación positiva entre el precio y los precios vecinos. SAR es el mejor modelo espacial global evaluado en prueba (`R² = 0.5997`, `RMSE = 0.4655`), aunque su Moran residual de `0.1753` indica que la cercanía no explica por sí sola todo el patrón.
 
-Los barrios funcionan como regímenes distintos. El ICC de `0.4809` indica que cerca del 48 % de la variación residual está asociada con diferencias entre barrios. El modelo con intercepto y pendiente aleatoria de baños obtiene el menor AIC (`27755.80`) y RMSE en muestra (`0.4303`). Esto confirma que tanto el nivel base del precio como la relación con los baños cambian entre barrios.
+Además de dependencia, existe heterogeneidad espacial porque la relación entre los atributos y el precio no es igual en toda Medellín. MGWR mejora a GWR y alcanza un R² ajustado de `0.6102`. El efecto de baños es positivo y significativo en 83.5 % de los puntos, pero su intensidad cambia según la zona. Los distintos anchos de banda muestran que cada atributo actúa a una escala espacial diferente.
 
-En interpolación, Regresión-Kriging obtiene el mejor resultado bajo 38 bloques espaciales (`R² = 0.4373`, `RMSE = 0.4343`), porque combina atributos con una corrección espacial. Kriging y el proceso gaussiano reproducen los precios altos del suroriente, pero explican menos variación y tienen mayor incertidumbre en los bordes. No existe un ganador único: SAR es la mejor opción global evaluada en prueba, MGWR describe mejor la heterogeneidad y Regresión-Kriging produce la mejor superficie bajo validación espacial.
+Los barrios también funcionan como contextos diferentes. El ICC de `0.48` indica que cerca del 48 % de la variación restante está asociada con diferencias entre barrios, después de considerar las variables incluidas. El modelo con intercepto y pendiente aleatoria obtiene el menor AIC (`27755.80`) y RMSE en muestra (`0.4303`). Esto confirma que una vivienda con características similares puede tener un precio distinto según el barrio y que incluso el aporte de un baño adicional cambia entre barrios.
+
+Predecir el precio sigue siendo difícil porque depende de muchos factores que no están en los datos: área construida, estado del inmueble, antigüedad, piso, parqueaderos, seguridad, ruido, accesibilidad y cercanía a servicios. También hay pocos anuncios en algunas zonas y diferencias entre el precio publicado y el precio real de venta. Regresión-Kriging fue la mejor interpolación por bloques (`R² = 0.4373`, `RMSE = 0.4343`), pero todavía dejó dependencia residual. En conjunto, SAR explica mejor la relación global con los vecinos, MGWR muestra cómo cambian las relaciones dentro de la ciudad y Regresión-Kriging ofrece la mejor superficie de predicción evaluada.
