@@ -1,251 +1,323 @@
-\documentclass[11pt]{article}
+\documentclass[conference]{IEEEtran}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[spanish,es-nodecimaldot]{babel}
-\usepackage{geometry}
-\usepackage{booktabs}
 \usepackage{amsmath}
+\usepackage{booktabs}
 \usepackage{graphicx}
-\usepackage{xcolor}
 \usepackage{hyperref}
-\usepackage{float}
 \usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{placeins}
 
-\geometry{letterpaper, margin=2.5cm}
+\graphicspath{{figures/}}
 \hypersetup{
-    hypertexnames=false,
     colorlinks=true,
-    linkcolor=blue,
-    citecolor=blue,
+    linkcolor=black,
+    citecolor=black,
     urlcolor=blue
 }
 
-\title{Dependencia, heterogeneidad e interpolación espacial del precio de la vivienda en Medellín}
-\author{Kevin Arley Parra Henao\\
+\title{Dependencia y heterogeneidad espacial del precio de la vivienda en Medellín}
+
+\author{
+\IEEEauthorblockN{Kevin Arley Parra Henao}
+\IEEEauthorblockA{
 Universidad Nacional de Colombia, sede Medellín\\
-Curso de Análisis Geoespacial}
-\date{\today}
+Curso de Análisis Geoespacial
+}
+}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-Este trabajo estudia cómo se relaciona la ubicación geográfica de una vivienda en Medellín con su precio de venta. Los anuncios inmobiliarios se representan como un patrón de puntos marcados, donde la ubicación corresponde a la geometría y el logaritmo del precio constituye la marca principal. Se combinan análisis exploratorio espacial, indicadores globales y locales de autocorrelación, modelos de dependencia espacial, regresiones localmente ponderadas, modelos jerárquicos e interpolación geoestadística y probabilística. El precio logarítmico presentó una autocorrelación espacial global alta y significativa ($I$ de Moran de 0.5898 para diez vecinos; $p=0.001$). Los modelos SEM y SAR-Lag confirmaron dependencia asociada tanto con factores espaciales omitidos como con los precios vecinos. MGWR mostró que los efectos de las características de la vivienda operan a escalas diferentes, mientras el modelo mixto estimó que cerca del 48.1\,\% de la variación residual se relaciona con diferencias entre barrios. En validación por bloques espaciales, regresión-Kriging superó a Kriging ordinario y al proceso gaussiano puramente espacial. Los resultados preliminares indican que la ubicación interviene mediante dependencia entre observaciones cercanas, heterogeneidad de las relaciones y variación territorial no observada.
-
-\medskip
-\noindent\textbf{Palabras clave:} precio de vivienda, autocorrelación espacial, MGWR, modelos mixtos, Kriging, procesos gaussianos, Medellín.
+Este trabajo analiza cómo la ubicación y la cercanía entre viviendas se relacionan con el precio de venta en Medellín. Los anuncios se representan como puntos marcados, donde la marca principal es el logaritmo natural del precio. El análisis combina centrografía, densidad kernel normalizada, K-means espacial, Moran global y local, modelos OLS, SEM y SAR, regresión geográficamente ponderada (GWR y MGWR), modelos jerárquicos por barrio, Kriging ordinario, regresión-Kriging y procesos gaussianos. El precio logarítmico presentó dependencia espacial positiva y significativa ($I$ de Moran de 0.5898 con diez vecinos, $p=0.001$). SAR confirmó una relación positiva con los precios vecinos ($\rho=0.5496$), mientras SEM encontró dependencia en factores territoriales no observados ($\lambda=0.7351$). MGWR mostró que la relación entre los atributos y el precio cambia dentro de la ciudad. El modelo jerárquico estimó que el 48.1\,\% de la variación restante se relaciona con diferencias entre barrios. En validación por bloques, regresión-Kriging fue el mejor método de interpolación ($R^2=0.4373$ y RMSE de 0.4343). Los resultados muestran que la ubicación influye mediante el contexto barrial, la semejanza entre precios cercanos y relaciones que cambian entre zonas.
 \end{abstract}
+
+\begin{IEEEkeywords}
+precio de vivienda, dependencia espacial, heterogeneidad espacial, MGWR, modelos jerárquicos, Kriging, procesos gaussianos.
+\end{IEEEkeywords}
 
 \section{Introducción}
 
-El precio de una vivienda depende de atributos estructurales, como el número de habitaciones y baños, pero también de características territoriales que no se distribuyen uniformemente. La accesibilidad, los equipamientos, las condiciones socioeconómicas, la calidad ambiental y las referencias de mercado generan semejanzas entre viviendas próximas. En consecuencia, el supuesto de independencia utilizado por una regresión convencional puede resultar inadecuado.
+El precio de una vivienda no depende únicamente de sus habitaciones, dormitorios o baños. Dos inmuebles con características parecidas pueden tener precios diferentes por estar ubicados en barrios distintos. La accesibilidad, la seguridad, los servicios cercanos, la calidad del entorno y la valoración histórica de cada sector forman parte de esa diferencia. Además, los anuncios próximos suelen compartir condiciones de mercado y, por tanto, sus precios pueden parecerse.
 
-La primera ley de la geografía plantea que los objetos cercanos tienden a estar más relacionados que los lejanos \cite{tobler1970}. En el mercado inmobiliario, esta relación puede manifestarse de al menos tres maneras. Primero, mediante \emph{dependencia espacial}: el precio o los errores de viviendas vecinas se relacionan. Segundo, mediante \emph{heterogeneidad espacial}: la magnitud de los coeficientes cambia según la ubicación. Tercero, mediante una superficie continua latente que puede aproximarse con métodos de interpolación y procesos estocásticos.
+Este comportamiento plantea dos conceptos principales. La \emph{dependencia espacial} aparece cuando el precio de una vivienda se relaciona con los precios de las viviendas cercanas. La \emph{heterogeneidad espacial} ocurre cuando una misma característica no tiene la misma relación con el precio en toda la ciudad. Por ejemplo, un baño adicional puede estar asociado con un cambio mayor de precio en una zona que en otra.
 
-Los modelos SAR y SEM representan mecanismos globales de dependencia \cite{anselin1988}; GWR y MGWR permiten coeficientes localmente variables \cite{fotheringham2002}; los modelos multinivel representan viviendas anidadas en barrios; y Kriging y los procesos gaussianos utilizan funciones de variograma o covarianza para predecir valores y cuantificar incertidumbre \cite{cressie1993,rasmussen2006}. Estas familias no son intercambiables: cada una responde una dimensión distinta del problema espacial.
+Los materiales del curso presentan herramientas para estudiar estas dos dimensiones, desde patrones de puntos y autocorrelación hasta modelos locales, jerárquicos y procesos gaussianos \cite{materialcurso,librocurso}. Siguiendo ese enfoque, este proyecto responde dos preguntas: ¿cómo se relaciona la ubicación geográfica de una vivienda en Medellín con su precio?, y ¿cómo la ubicación y la cercanía de inmuebles vecinos ayudan a explicar y predecir su precio de venta?
 
-La pregunta de investigación es: \emph{¿cómo se relaciona la ubicación geográfica de una vivienda en Medellín con su precio?} El objetivo general es identificar, modelar y comparar la dependencia y la heterogeneidad espacial del precio de venta. Los objetivos específicos son: (i) describir el precio como marca de un patrón puntual; (ii) localizar agrupaciones significativas de precios altos y bajos; (iii) evaluar dependencia mediante OLS, SEM y SAR-Lag; (iv) estudiar heterogeneidad con GWR, MGWR y modelos jerárquicos; y (v) comparar Kriging ordinario, regresión-Kriging y procesos gaussianos bajo validación espacial.
+El objetivo es describir el patrón territorial del precio, medir su dependencia espacial, evaluar si las relaciones cambian entre zonas y comparar métodos de predicción espacial. No se busca establecer causalidad. Los resultados indican asociaciones: muestran dónde aparecen los patrones y cuánto ayudan a explicar o predecir el precio.
 
 \section{Datos y metodología}
 
-\subsection{Datos}
+\subsection{Datos y representación espacial}
 
-La fuente corresponde al conjunto \emph{Colombia Housing Properties Price}, distribuido en Kaggle. Después del procesamiento desarrollado en el proyecto se conservaron 35\,814 anuncios de venta con coordenadas y precio para Medellín. La partición original asignó 25\,069 observaciones a entrenamiento (70\,\%) y 10\,745 a prueba (30\,\%). Este artículo no introduce modificaciones adicionales al tratamiento de datos ni a los modelos clásicos ya implementados.
+Se utilizó el conjunto \emph{Colombia Housing Properties Price}. Después del tratamiento realizado previamente en el proyecto, quedaron 35\,814 anuncios de Medellín. La partición original contiene 25\,069 observaciones de entrenamiento y 10\,745 de prueba. Esta etapa espacial no modificó la limpieza ni los modelos de aprendizaje automático ya existentes.
 
-Las variables principales son precio, longitud, latitud, barrio, tipo de propiedad, habitaciones, dormitorios, baños, superficie total y superficie cubierta. Debido a la asimetría del precio, los análisis estadísticos espaciales utilizan
-\begin{equation}
+Las variables empleadas incluyen precio, longitud, latitud, barrio, tipo de propiedad, habitaciones, dormitorios y baños. Debido a la asimetría del precio se utilizó:
+\begin{equation*}
     y_i=\log(\text{precio}_i).
-\end{equation}
+\end{equation*}
+El logaritmo reduce el efecto de valores extremos y facilita la comparación de cambios relativos.
+Esta transformación y su uso en el análisis de precios espaciales siguen el tratamiento presentado en el material del curso \cite{materialcurso}.
 
-Los puntos se construyeron inicialmente en WGS 84 (EPSG:4326) y se reproyectaron a MAGNA-SIRGAS / Origen-Nacional (EPSG:9377), cuyas unidades son metros. Para el análisis territorial se emplearon 252 polígonos de barrios del material del curso. La unión espacial asignó 22\,857 puntos de entrenamiento a 226 barrios con al menos un anuncio.
+Los anuncios se convirtieron en puntos y se proyectaron en MAGNA-SIRGAS / Origen-Nacional (EPSG:9377), cuyas unidades son metros. La unión espacial con 252 polígonos oficiales del material del curso asignó 22\,857 puntos de entrenamiento a 226 barrios con al menos un anuncio. GWR, MGWR y los procesos continuos utilizaron únicamente geometrías dentro del límite de Medellín.
 
-\subsection{Patrón de puntos marcados}
+\subsection{Patrón de puntos y agrupamiento}
 
-Cada vivienda se representa como un punto $s_i$ con marca $y_i$. La descripción incluye centro medio, centro ponderado por la marca, elipse de una desviación estándar y envolvente convexa. También se construyó una superficie kernel normalizada:
-\begin{equation}
+Cada anuncio se trató como un punto con una marca de precio. Se calcularon el centro medio, el centro ponderado por \texttt{log\_price}, una elipse de desviación estándar y la envolvente convexa. La superficie kernel normalizada se definió como:
+\begin{equation*}
     \widehat{m}(s)=
     \frac{\sum_i K_h(s-s_i)y_i}
          {\sum_i K_h(s-s_i)},
-\end{equation}
-donde $h=1$ km. Esta razón suavizada busca representar el precio medio local sin confundir precios altos con una mayor cantidad de anuncios.
+\end{equation*}
+con ancho de banda de 1 km. La normalización evita confundir una zona con muchos anuncios con una zona de precios altos.
+La formulación del suavizado kernel se basa en el capítulo de patrones de puntos del libro del curso \cite{librocurso}.
 
-K-means se ajustó únicamente sobre las coordenadas estandarizadas. El número de grupos se seleccionó comparando inercia y Silhouette. Los precios se utilizaron posteriormente para caracterizar los grupos, no para definirlos.
+K-means se ajustó solamente con coordenadas proyectadas y estandarizadas. Se probaron entre dos y seis grupos. Silhouette mide qué tan compactos y separados están los grupos, mientras el método del codo identifica cuándo aumentar el número de clusters deja de reducir de manera importante la inercia.
 
-\subsection{Autocorrelación espacial}
+\subsection{Dependencia espacial}
 
-Para los puntos se construyeron matrices KNN estandarizadas por filas. La sensibilidad del $I$ de Moran se evaluó con $k=5$, 10 y 20. El análisis local utilizó Moran local o LISA con diez vecinos y 999 permutaciones. Las observaciones significativas se clasificaron como Alto--Alto, Bajo--Bajo, Alto--Bajo o Bajo--Alto.
+Para los puntos se construyeron matrices de los vecinos más cercanos (KNN) con 5, 10 y 20 vecinos. Moran global mide si los valores cercanos tienden a parecerse. Un valor positivo y significativo indica agrupación de valores similares. Moran local o LISA identifica dónde ocurre el patrón:
+\begin{itemize}
+    \item Alto--Alto: precio alto rodeado por precios altos.
+    \item Bajo--Bajo: precio bajo rodeado por precios bajos.
+    \item Alto--Bajo y Bajo--Alto: observaciones que contrastan con su entorno.
+\end{itemize}
 
-Los anuncios se agregaron por barrio mediante el precio mediano y la densidad de anuncios por km$^2$. Para los barrios se construyó una matriz de contigüidad Queen. Posteriormente se calcularon Moran global y LISA sobre la mediana de $\log(\text{precio})$.
+Para los barrios se utilizó una matriz Queen: dos barrios son vecinos si comparten un borde o un vértice. Se calcularon Moran y LISA sobre la mediana barrial de \texttt{log\_price}, usando 999 permutaciones.
 
-\subsection{Dependencia espacial global}
-
-El modelo OLS hedónico se utilizó como referencia:
-\begin{equation}
+OLS se empleó como modelo global de referencia:
+\begin{equation*}
     \mathbf{y}=\mathbf{X}\boldsymbol{\beta}+\boldsymbol{\varepsilon}.
-\end{equation}
-La matriz $\mathbf{X}$ incorpora habitaciones, dormitorios, baños, barrio y tipo de propiedad. Las pruebas LM-Lag y LM-Error orientaron el ajuste de dos modelos:
-\begin{align}
-    \text{SAR-Lag:}\quad
-    \mathbf{y}&=\rho\mathbf{W}\mathbf{y}+
-    \mathbf{X}\boldsymbol{\beta}+\boldsymbol{\varepsilon},\\
-    \text{SEM:}\quad
-    \mathbf{y}&=\mathbf{X}\boldsymbol{\beta}+\mathbf{u},\qquad
+\end{equation*}
+La notación de OLS y de los modelos espaciales siguientes se basa en los contenidos de correlación y regresión espacial del libro y del material del curso \cite{librocurso,materialcurso}.
+Luego se ajustaron SEM y SAR. SEM representa dependencia en factores espaciales no incluidos:
+\begin{equation*}
     \mathbf{u}=\lambda\mathbf{W}\mathbf{u}+\boldsymbol{\varepsilon}.
-\end{align}
-Los modelos se compararon mediante $R^2$, MAE, RMSE y Moran residual.
+\end{equation*}
+SAR incorpora el precio de las viviendas vecinas:
+\begin{equation*}
+    \mathbf{y}=\rho\mathbf{W}\mathbf{y}
+    +\mathbf{X}\boldsymbol{\beta}+\boldsymbol{\varepsilon}.
+\end{equation*}
 
-\subsection{Heterogeneidad espacial}
+\subsection{Heterogeneidad y regímenes espaciales}
 
-GWR estima un vector de coeficientes para cada ubicación:
-\begin{equation}
+GWR (\emph{Geographically Weighted Regression}) estima coeficientes alrededor de cada punto y usa un ancho de banda común. MGWR (\emph{Multiscale Geographically Weighted Regression}) permite un ancho diferente para cada variable:
+\begin{equation*}
     y_i=\beta_0(s_i)+\sum_{k=1}^{p}\beta_k(s_i)x_{ik}+\varepsilon_i.
-\end{equation}
-Se utilizó un kernel bisquare adaptativo y un ancho de banda seleccionado por AICc. MGWR amplía el modelo al asignar un ancho de banda diferente a cada término. El análisis empleó una muestra espacialmente estratificada de 1\,934 viviendas y tres predictores estandarizados: habitaciones, dormitorios y baños.
+\end{equation*}
+Esta formulación corresponde al desarrollo de GWR y MGWR presentado en el libro del curso \cite{librocurso}.
 
-Los diagnósticos incluyeron AICc, $R^2$ ajustado, coeficientes significativos, números de condición local y Moran residual. Los valores críticos de significancia se ajustaron según los parámetros efectivos de MGWR.
+Se seleccionaron 1\,890 puntos distribuidos dentro de Medellín. Los predictores fueron habitaciones, dormitorios y baños estandarizados. El ancho se seleccionó mediante AICc, que compara ajuste y complejidad y penaliza parámetros innecesarios. También se evaluaron significancia local, número de condición y Moran residual.
 
-\subsection{Regímenes y modelo jerárquico}
+Para representar barrios como regímenes se compararon OLS, un \emph{Random Intercept Model} y un modelo con intercepto y pendiente aleatoria de baños. El ICC se calculó como:
+\begin{equation*}
+    \mathrm{ICC}=
+    \frac{\sigma^2_{\text{barrio}}}
+    {\sigma^2_{\text{barrio}}+\sigma^2_{\text{residual}}}.
+\end{equation*}
+Este valor indica qué parte de la variación restante corresponde a diferencias entre barrios.
+La definición del ICC y la estructura jerárquica siguen el capítulo de modelos jerárquicos del libro \cite{librocurso}.
 
-Las viviendas constituyen el nivel 1 y los barrios el nivel 2. El modelo con intercepto aleatorio es
-\begin{equation}
-    y_{ij}=\beta_0+\mathbf{x}_{ij}^{\mathsf T}\boldsymbol{\beta}
-    +u_{0j}+\varepsilon_{ij},
-\end{equation}
-donde $u_{0j}$ representa la desviación del barrio $j$. Un segundo modelo permite que el coeficiente de baños varíe por barrio:
-\begin{equation}
-    y_{ij}=\beta_0+\mathbf{x}_{ij}^{\mathsf T}\boldsymbol{\beta}
-    +u_{0j}+u_{1j}\,\text{baños}_{ij}+\varepsilon_{ij}.
-\end{equation}
-La proporción de varianza entre barrios se resume mediante el coeficiente de correlación intraclase:
-\begin{equation}
-    \mathrm{ICC}=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2_\varepsilon}.
-\end{equation}
+\subsection{Interpolación y validación espacial}
 
-\subsection{Kriging y proceso gaussiano}
+Se construyeron 38 bloques espaciales de aproximadamente 2 km: 1\,646 puntos quedaron para entrenamiento y 244 para prueba. Ningún bloque de prueba apareció en entrenamiento, por lo que la evaluación representa la predicción de zonas completas no observadas.
 
-La evaluación de los campos continuos reutilizó la muestra de heterogeneidad. Se formaron 64 bloques espaciales de aproximadamente 2 km; 1\,389 observaciones se destinaron a entrenamiento y 545 a validación, sin compartir bloques.
+Kriging ordinario predice mediante valores cercanos y un variograma. Se compararon modelos esférico, exponencial y gaussiano, con un máximo de 80 vecinos. Regresión-Kriging primero estimó la tendencia con habitaciones, dormitorios y baños mediante Ridge y después interpoló los residuos.
 
-Kriging ordinario se ajustó con variogramas esférico, exponencial y gaussiano. Para cada predicción se utilizaron hasta 80 vecinos. El variograma se seleccionó por RMSE en los bloques reservados. Regresión-Kriging separó una tendencia Ridge, basada en habitaciones, dormitorios y baños, y aplicó Kriging a sus residuos.
-
-El proceso gaussiano espacial empleó el kernel
-\begin{equation}
+El proceso gaussiano utilizó un kernel Matérn con ruido blanco:
+\begin{equation*}
     k(s_i,s_j)=\sigma_f^2
     k_{\mathrm{Mat\acute ern}\,3/2}(s_i,s_j)
     +\sigma_n^2\delta_{ij}.
-\end{equation}
-Los hiperparámetros se estimaron maximizando la verosimilitud marginal. Los tres métodos se compararon con $R^2$, MAE, RMSE, Moran residual e incertidumbre media.
+\end{equation*}
+La representación mediante funciones de covarianza y ruido se basa en los capítulos de Kriging y procesos gaussianos del libro y en el material del curso \cite{librocurso,materialcurso}.
+La media posterior es la predicción y la desviación estándar posterior mide incertidumbre. Los métodos se compararon con $R^2$, MAE, RMSE y Moran residual.
 
 \section{Resultados}
 
-\subsection{Estructura espacial del precio}
+\subsection{Patrón espacial y barrios}
 
-El centro ponderado por precio logarítmico se ubicó a 65 m del centro medio. La elipse de desviación presentó semiejes aproximados de 3.38 km y 1.81 km, con orientación cercana a 105 grados. K-means seleccionó tres grupos con Silhouette de 0.520. Aunque el precio no participó en el agrupamiento, sus medianas fueron aproximadamente 250, 340 y 690 millones de pesos.
+El centro medio se ubicó en Tenche y el centro ponderado por precio en Trinidad. La distancia entre ambos fue de 65.02 m. El pequeño desplazamiento indica que los anuncios costosos del suroriente no cambian mucho el centro general, porque la oferta también se distribuye por el centro, occidente y norte. La elipse presentó semiejes de 3.38 km y 1.81 km, con orientación de 105.33 grados, coherente con la forma alargada del valle.
 
-El precio mostró una asociación global alta. Con diez vecinos, el $I$ de Moran fue 0.5898 para el precio logarítmico y 0.4448 para el precio original; ambos tuvieron $p=0.001$. LISA puntual clasificó 23.8\,\% de las viviendas como Alto--Alto y 24.4\,\% como Bajo--Bajo. A escala barrial, Moran fue 0.4752 ($p=0.001$); se identificaron 29 barrios Alto--Alto y 37 Bajo--Bajo.
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\columnwidth]{centrography.png}
+    \caption{Centrografía del patrón de anuncios. La cruz es el centro medio, la estrella es el centro ponderado por precio, la elipse resume dispersión y la línea roja muestra la envolvente convexa.}
+    \label{fig:centrography}
+\end{figure}
 
-\subsection{Modelos de dependencia}
+La superficie kernel varió aproximadamente entre 19.00 y 20.64 en escala logarítmica, equivalentes a valores cercanos a 178 y 922 millones de pesos. Sus máximos se concentran hacia El Poblado y representan promedios locales altos, no solo mayor cantidad de anuncios.
 
-OLS obtuvo $R^2=0.5870$ y RMSE de 0.4745 en entrenamiento, pero dejó Moran residual de 0.2461 ($p=0.001$). Las pruebas LM-Lag y LM-Error, incluidas sus versiones robustas, fueron significativas.
+K-means seleccionó tres clusters con Silhouette de 0.520. El cluster 0 agrupó principalmente sectores centrales y del norte, como La Candelaria y Boston, con mediana de 250 millones. El cluster 1 cubrió buena parte del occidente, incluidos Laureles, Los Conquistadores y Belén, con 340 millones. El cluster 2 reunió principalmente El Poblado, con barrios como El Tesoro, San Lucas, Los Balsos y Castropol, y alcanzó 690 millones. El precio no definió los grupos; las diferencias aparecieron después de agrupar solamente por ubicación.
 
-SEM estimó $\lambda=0.7351$ ($p<0.001$). Después de filtrar la dependencia, su error presentó $I=-0.0013$ y $p=0.243$. SAR-Lag estimó $\rho=0.5496$ ($p<0.001$) y redujo Moran residual de entrenamiento a 0.0353. En prueba, SAR-Lag fue el mejor modelo estadístico espacial, con $R^2=0.5997$, MAE de 0.3491 y RMSE de 0.4655. No obstante, su Moran residual de prueba fue 0.1753, lo que indica estructura aún no explicada.
+\subsection{Dependencia espacial global y local}
 
-\subsection{Heterogeneidad y regímenes}
+Sí existe dependencia espacial. Con diez vecinos, Moran de \texttt{log\_price} fue 0.5898 ($p=0.001$). El resultado es positivo y significativo: las viviendas cercanas tienden a presentar precios similares y el patrón no se explica por azar. El valor disminuyó de 0.6254 con cinco vecinos a 0.5553 con veinte, pero la conclusión se mantuvo.
 
-\begin{table}[H]
+LISA puntual clasificó 23.81\,\% de las viviendas como Alto--Alto y 24.44\,\% como Bajo--Bajo. Los casos Bajo--Alto representaron 3.23\,\% y los Alto--Bajo 2.09\,\%. A escala barrial, Moran fue 0.4752 ($p=0.001$). Se identificaron 29 barrios Alto--Alto, con mediana conjunta de 690 millones, y 37 Bajo--Bajo, con mediana de 165 millones.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\columnwidth]{neighborhood_lisa.png}
+    \caption{Clusters LISA del precio logarítmico mediano por barrio. Rojo representa Alto--Alto y azul Bajo--Bajo.}
+    \label{fig:lisa}
+\end{figure}
+
+La matriz Queen tuvo 4.86 vecinos por barrio, dos componentes conectados y ninguna isla. El componente principal incluyó 224 barrios; el segundo estuvo formado por María Cano--Carambolas y Carpinelo, conectados entre sí pero no con los barrios observados del componente principal.
+
+\subsection{Modelos globales de dependencia}
+
+OLS obtuvo $R^2=0.5870$ y RMSE de 0.4745 en entrenamiento. Sin embargo, sus residuos conservaron Moran de 0.2461 ($p=0.001$). Por tanto, los atributos incluidos no explicaron toda la estructura territorial.
+
+SEM estimó $\lambda=0.7351$ ($p<0.001$). El valor alto indica que factores territoriales no incluidos comparten un patrón entre viviendas vecinas. Después de filtrar esa estructura, el error presentó Moran de $-0.0013$ y $p=0.243$, sin evidencia de dependencia restante.
+
+SAR estimó $\rho=0.5496$ ($p<0.001$). Esto significa que el precio vecino aporta información positiva al explicar el precio de una vivienda. En prueba, SAR fue el mejor modelo espacial global, con $R^2=0.5997$ y RMSE de 0.4655. Su Moran residual fue 0.1753, por lo que todavía quedó estructura sin explicar.
+
+\begin{table}[!t]
+\caption{Modelos espaciales globales en prueba}
+\label{tab:global}
 \centering
-\caption{Comparación explicativa de heterogeneidad espacial.}
-\begin{tabular}{lrrrr}
+\begin{tabular}{lccc}
 \toprule
-Modelo & $R^2$ ajustado & AICc & RMSE & Moran residual\\
+Modelo & $R^2$ & RMSE & Moran residual\\
 \midrule
-OLS global & 0.3236 & --- & 0.6339 & 0.3301\\
-GWR        & 0.5887 & 2949.46 & 0.4739 & 0.0184\\
-MGWR       & 0.6135 & 2905.21 & 0.4521 & -0.0419\\
+OLS & 0.5828 & 0.4752 & 0.1926\\
+SEM & 0.5649 & 0.4853 & 0.2437\\
+SAR & \textbf{0.5997} & \textbf{0.4655} & 0.1753\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-MGWR asignó anchos de banda de 304 vecinos a habitaciones, 117 a dormitorios y 106 a baños. Habitaciones fue significativa en 36.7\,\% de las ubicaciones, dormitorios en 1.0\,\% y baños en 67.4\,\%. Ningún número de condición local superó 30.
+\subsection{Heterogeneidad espacial}
 
-El modelo mixto con intercepto aleatorio produjo un ICC de 0.4809. Por tanto, cerca del 48.1\,\% de la variación residual corresponde a diferencias entre barrios. El modelo con intercepto y pendiente aleatoria de baños obtuvo AIC de 27\,755.80 y RMSE en muestra de 0.4303; mejoró al modelo de intercepto aleatorio (AIC 28\,472.25; RMSE 0.4410) y al OLS comparable (AIC 39\,759.42; RMSE 0.5773).
-
-\subsection{Procesos continuos e interpolación}
-
-El variograma esférico produjo el menor RMSE entre las alternativas de Kriging ordinario. La Tabla~\ref{tab:continuous} muestra la evaluación en bloques espaciales.
-
-\begin{table}[H]
+\begin{table}[!t]
+\caption{Comparación de heterogeneidad sobre 1\,890 puntos}
+\label{tab:heterogeneity}
 \centering
-\caption{Validación por bloques de los modelos continuos.}
+\begin{tabular}{lcccc}
+\toprule
+Modelo & $R^2$ aj. & AICc & RMSE & Moran\\
+\midrule
+OLS & 0.3758 & --- & 0.6129 & 0.2722\\
+GWR & 0.5985 & 2837.88 & 0.4738 & 0.0132\\
+MGWR & \textbf{0.6102} & \textbf{2773.17} & \textbf{0.4678} & -0.0347\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+MGWR obtuvo el mejor equilibrio entre ajuste y complejidad. Sus anchos de banda fueron 64 vecinos para el intercepto, 1\,015 para habitaciones, 364 para dormitorios y 149 para baños. El ancho grande de habitaciones indica una relación amplia y estable; los anchos menores del intercepto y baños permiten cambios más locales.
+
+Baños fue positivo y significativo en 83.54\,\% de los puntos, habitaciones en 54.07\,\% y dormitorios en 5.03\,\%. El coeficiente local de baños varió aproximadamente entre 0.154 y 0.747. Por tanto, sí hay heterogeneidad: la relación es positiva, pero su intensidad cambia según la zona. Ningún punto superó el número de condición de 30; los valores estuvieron aproximadamente entre 1.5 y 3.2, sin evidencia de multicolinealidad local fuerte.
+
+\begin{figure*}[!t]
+    \centering
+    \includegraphics[width=0.94\textwidth]{mgwr_diagnostics.png}
+    \caption{Diagnósticos MGWR. Izquierda: número de condición local. Derecha: coeficientes significativos de baños; los puntos grises no fueron significativos.}
+    \label{fig:mgwr}
+\end{figure*}
+
+GWR redujo Moran residual a 0.0132 con $p=0.084$, por lo que no quedó evidencia de dependencia al nivel de 5\,\%. MGWR produjo un valor pequeño y negativo de $-0.0347$ ($p=0.001$). Esto indica que ambos modelos captaron casi toda la agrupación positiva inicial; MGWR dejó una alternancia local leve.
+
+\subsection{Regímenes por barrio}
+
+El modelo de intercepto aleatorio estimó varianza entre barrios de 0.182 y varianza residual de 0.1963. De estas cifras se obtuvo un ICC de 0.4809:
+\begin{equation*}
+    \mathrm{ICC}=\frac{0.182}{0.182+0.1963}=0.4809.
+\end{equation*}
+Así, cerca del 48.1\,\% de la variación restante está entre barrios y el 51.9\,\% entre viviendas del mismo barrio.
+
+El modelo con intercepto y pendiente aleatoria de baños obtuvo el menor AIC (27\,755.80) y RMSE en muestra (0.4303). Mejoró al modelo de solo intercepto (AIC de 28\,472.25 y RMSE de 0.4410) y al OLS comparable (RMSE de 0.5773). Esto indica que los barrios difieren tanto en su nivel base de precio como en la relación entre baños y precio.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\columnwidth]{hierarchical_effects.png}
+    \caption{Efectos aleatorios del intercepto por barrio. Los tonos rojos indican un nivel base superior al promedio y los azules uno inferior, después de controlar los atributos incluidos.}
+    \label{fig:hierarchical}
+\end{figure}
+
+\subsection{Kriging y procesos gaussianos}
+
+El variograma esférico fue seleccionado porque produjo el menor RMSE (0.5094), aunque las diferencias frente al exponencial (0.5128) y al gaussiano (0.5153) fueron pequeñas. El modelo estimó nugget de 0.2742, sill total de 1.0484 y range de 12.75 km. El range indica la distancia estimada hasta la cual se mantiene relación espacial; el nugget representa diferencias muy locales o ruido.
+
+El proceso gaussiano optimizó el kernel
+\begin{multline*}
+0.746^2 \times \mathrm{Mat\acute ern}
+(\ell=[1.05,0.603],\\
+\nu=1.5)+\mathrm{WhiteKernel}(0.595).
+\end{multline*}
+La varianza espacial fue aproximadamente 0.557 y el ruido 0.595. El ruido ligeramente mayor muestra que una parte importante de la diferencia entre precios no puede explicarse solo mediante una superficie suave.
+
+\begin{table}[!t]
+\caption{Validación por bloques de modelos continuos}
 \label{tab:continuous}
-\begin{tabular}{lrrrr}
+\centering
+\begin{tabular}{lcccc}
 \toprule
-Modelo & $R^2$ & MAE & RMSE & Moran residual\\
+Modelo & $R^2$ & MAE & RMSE & Moran\\
 \midrule
-Kriging ordinario & 0.4727 & 0.4472 & 0.5855 & 0.1877\\
-Regresión-Kriging & 0.6143 & 0.3812 & 0.5007 & 0.1950\\
-Proceso gaussiano & 0.4599 & 0.4440 & 0.5926 & 0.2238\\
+Kriging & 0.2256 & 0.3801 & 0.5094 & 0.1878\\
+Reg.-Kriging & \textbf{0.4373} & \textbf{0.3116} & \textbf{0.4343} & 0.0657\\
+Proceso gaussiano & 0.1610 & 0.3951 & 0.5302 & 0.2481\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-El proceso gaussiano optimizó un kernel Matérn con longitudes de escala estandarizadas de 1.07 y 0.784 por eje, y un componente de ruido de 0.661. Este ruido alto es consistente con variabilidad de precios que no puede explicarse mediante una superficie espacial suave. Todos los modelos continuos conservaron Moran residual significativo.
+Regresión-Kriging fue el mejor método continuo. Su ventaja se debe a que primero explica parte del precio con atributos de la vivienda y luego usa la cercanía para corregir los residuos. Su Moran residual de 0.0657 ($p=0.017$) fue menor que el de Kriging y el proceso gaussiano, aunque todavía significativo.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\columnwidth]{kriging_surface.png}
+    \caption{Predicción de Kriging ordinario. Los precios esperados son mayores hacia El Poblado y el suroriente y menores hacia el norte.}
+    \label{fig:surfaces}
+\end{figure}
+
+Kriging estimó precios más altos hacia El Poblado y el suroriente y menores hacia el norte. La incertidumbre media fue 0.5989 para Kriging, 0.5628 para regresión-Kriging y 0.6624 para el proceso gaussiano. Una incertidumbre alta no significa un precio alto: significa que el modelo tiene menos evidencia para fijar la predicción, especialmente en zonas periféricas.
+
+\FloatBarrier
 
 \section{Discusión}
 
-Los resultados demuestran que la relación entre ubicación y precio no puede resumirse con una única coordenada o un efecto global. Moran y LISA muestran semejanza espacial y localizan concentraciones Alto--Alto y Bajo--Bajo. SAR-Lag indica una asociación positiva entre el precio y el rezago de precios vecinos; SEM muestra que existen factores territoriales omitidos que comparten las viviendas próximas.
+Los resultados responden que la ubicación tiene una relación clara con el precio. El cluster localizado principalmente en El Poblado tuvo una mediana muy superior a los clusters del occidente y del centro-norte. Este resultado no implica que la coordenada cause el precio. La ubicación resume condiciones del barrio y del entorno que no aparecen de forma directa en la base.
 
-La superioridad explicativa de GWR y MGWR frente al OLS global apoya la existencia de no estacionariedad. El efecto de baños opera a una escala más local que el de habitaciones y es significativo en una proporción mayor de ubicaciones. La escasa significancia local de dormitorios, aun cuando el coeficiente global es significativo, ilustra cómo un promedio global puede ocultar inestabilidad territorial.
+La cercanía también aporta información. Moran, LISA y SAR muestran que los precios altos se agrupan con otros altos y los bajos con otros bajos. El parámetro de SAR indica una asociación positiva con los precios vecinos. Sin embargo, el Moran residual de prueba muestra que el modelo global no captura toda la estructura.
 
-El ICC cercano a 0.48 constituye evidencia adicional de heterogeneidad. Dos viviendas con características semejantes pueden tener precios sistemáticamente distintos por pertenecer a barrios diferentes. Además, permitir una pendiente aleatoria de baños mejora el ajuste, indicando que el valor asociado con esta característica depende del contexto barrial.
+SEM ofrece una explicación complementaria. Su parámetro elevado y el error filtrado sin dependencia significativa indican que parte de la agrupación corresponde a factores territoriales omitidos. Por ejemplo, viviendas próximas pueden compartir acceso a transporte, seguridad, ruido o calidad urbana. SAR representa la semejanza con el precio vecino; SEM representa condiciones espaciales no observadas. Ambos mecanismos pueden coexistir.
 
-Regresión-Kriging fue el mejor método continuo porque combina una tendencia hedónica con interpolación residual. Kriging ordinario y el proceso gaussiano espacial utilizan principalmente proximidad; por ello no representan completamente la heterogeneidad estructural de las viviendas. El proceso gaussiano, sin embargo, aporta una interpretación probabilística directa y superficies de incertidumbre.
+La evidencia también confirma heterogeneidad. MGWR mejoró a GWR y utilizó escalas distintas para cada atributo. El efecto de baños fue positivo en toda la muestra, pero no tuvo la misma intensidad en cada zona. El modelo jerárquico reforzó esta conclusión: casi la mitad de la variación restante estuvo asociada con diferencias entre barrios.
 
-Las métricas no permiten declarar un único ganador universal. Random Forest obtuvo la mayor precisión bajo la partición aleatoria original, pero su objetivo es predictivo. SAR y SEM son más apropiados para interpretar mecanismos globales de dependencia; MGWR para estudiar heterogeneidad de coeficientes; el modelo mixto para cuantificar variación entre barrios; y regresión-Kriging para interpolar fuera de ubicaciones observadas. Las comparaciones entre protocolos deben hacerse con cautela, porque los modelos continuos se evaluaron con bloques espaciales, un criterio más exigente.
+La validación por bloques fue más exigente que una partición aleatoria, porque evaluó zonas completas no vistas. Por esta razón, los $R^2$ de interpolación son menores y no deben compararse directamente con SAR, GWR o MGWR. Regresión-Kriging funcionó mejor porque combinó atributos y dependencia espacial. Kriging y el proceso gaussiano usaron principalmente coordenadas y tuvieron dificultades para representar diferencias propias de cada vivienda.
 
-Las principales limitaciones son la ausencia de variables de accesibilidad, seguridad, ingresos, equipamientos y calidad ambiental; la cobertura incompleta de las superficies; la concentración de anuncios en algunas coordenadas; y el uso de publicaciones, que no necesariamente equivale a transacciones efectivas. Los resultados representan asociación y predicción, no causalidad.
+Predecir el precio es difícil porque faltan variables relevantes: área construida, antigüedad, estado, piso, parqueaderos, seguridad, ruido, accesibilidad y cercanía a servicios. También existe diferencia entre el precio publicado y el precio efectivo de venta. La oferta está concentrada en algunas zonas, mientras en los bordes hay menos anuncios y mayor incertidumbre. Ningún modelo puede recuperar por completo información que no está en los datos.
 
 \section{Conclusiones}
 
-La ubicación geográfica mantiene una relación sustantiva con el precio de la vivienda en Medellín. Los precios similares se agrupan tanto entre puntos como entre barrios, y esta estructura permanece parcialmente después de controlar atributos observados.
+La ubicación geográfica está relacionada con el precio de la vivienda en Medellín. El suroriente, especialmente El Poblado, concentra precios más altos, mientras varios sectores del centro-norte y norte presentan niveles menores. La ubicación funciona como una síntesis del contexto urbano y barrial.
 
-SEM mostró que buena parte de la dependencia puede atribuirse a factores territoriales omitidos, mientras SAR-Lag confirmó una relación positiva con los precios vecinos. MGWR evidenció heterogeneidad espacial y escalas diferentes para habitaciones, dormitorios y baños. El modelo jerárquico estimó que aproximadamente el 48.1\,\% de la variabilidad residual ocurre entre barrios.
+Existe dependencia espacial porque los precios cercanos tienden a parecerse. Moran global y LISA muestran agrupaciones significativas, y SAR confirma una relación positiva con los precios vecinos. SEM indica además que existen factores territoriales no observados compartidos por viviendas próximas.
 
-Entre los métodos continuos, regresión-Kriging alcanzó la mayor capacidad de generalización espacial. Su desempeño sugiere que la mejor representación combina características de la vivienda y dependencia residual, en lugar de considerar únicamente la distancia. El proceso gaussiano permitió cuantificar incertidumbre y confirmó la presencia de un componente de ruido importante.
+También existe heterogeneidad espacial. MGWR mostró que habitaciones, dormitorios y baños actúan a escalas diferentes y que sus coeficientes cambian dentro de la ciudad. Baños presentó la relación local más constante, aunque su intensidad no fue igual en todas las zonas.
 
-En síntesis, el método más conveniente depende del propósito: Random Forest para precisión bajo el protocolo original; SAR/SEM para dependencia global; MGWR para heterogeneidad; modelos mixtos para regímenes barriales; y regresión-Kriging para interpolación espacial. La respuesta a la pregunta de investigación es, por tanto, multiescala: la ubicación se relaciona con el precio a través de semejanza local, contexto barrial y variación espacial continua.
+Los barrios tienen un papel importante. El ICC de 0.4809 indica que cerca del 48\,\% de la variación restante corresponde a diferencias entre barrios. Por esto, dos viviendas con atributos semejantes pueden presentar precios distintos según su contexto territorial.
 
-\section*{Trabajo pendiente para la versión final}
+Regresión-Kriging fue el mejor método continuo bajo validación espacial, pero explicó el 43.7\,\% de la variación en bloques no observados. Su resultado confirma que combinar atributos y cercanía es mejor que interpolar únicamente con coordenadas, aunque todavía queda dependencia residual.
 
-Este documento es un primer borrador. Antes de la entrega deben incorporarse las figuras exportadas desde el notebook, revisar la fuente bibliográfica del conjunto de datos, completar la descripción de las variables, verificar todas las cifras después de una ejecución final y ajustar el formato a las normas específicas solicitadas por el profesor o la revista elegida.
+No existe un método único para todas las preguntas. SAR representa mejor la dependencia global con los vecinos; SEM identifica factores espaciales omitidos; MGWR describe heterogeneidad; el modelo jerárquico cuantifica diferencias entre barrios; y regresión-Kriging ofrece la mejor superficie evaluada. En conjunto, estos métodos muestran que el precio depende de la vivienda, de sus vecinos y del territorio donde se encuentra.
 
-\begin{thebibliography}{9}
+\begin{thebibliography}{2}
 
-\bibitem{anselin1988}
-Anselin, L. (1988).
-\emph{Spatial Econometrics: Methods and Models}.
-Kluwer Academic Publishers.
+\bibitem{materialcurso}
+E. V. Aristizábal Giraldo, ``Materiales del curso Análisis Geoespacial,'' Universidad Nacional de Colombia. [En línea]. Disponible en:
+\url{https://edieraristizabal.github.io/AnalisisGeoespacial/}
 
-\bibitem{cressie1993}
-Cressie, N. (1993).
-\emph{Statistics for Spatial Data}.
-Wiley.
-
-\bibitem{fotheringham2002}
-Fotheringham, A. S., Brunsdon, C. y Charlton, M. (2002).
-\emph{Geographically Weighted Regression: The Analysis of Spatially Varying Relationships}.
-Wiley.
-
-\bibitem{rasmussen2006}
-Rasmussen, C. E. y Williams, C. K. I. (2006).
-\emph{Gaussian Processes for Machine Learning}.
-MIT Press.
-
-\bibitem{tobler1970}
-Tobler, W. R. (1970).
-A computer movie simulating urban growth in the Detroit region.
-\emph{Economic Geography}, 46, 234--240.
+\bibitem{librocurso}
+E. V. Aristizábal Giraldo, \emph{Libro de Análisis Geoespacial}. [En línea]. Disponible en:
+\url{https://edieraristizabal.github.io/Libro_AnalisisGeoespacial/intro.html}
 
 \end{thebibliography}
 
