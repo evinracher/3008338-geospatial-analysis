@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  4 AUG 2026 16:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  5 AUG 2026 17:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -459,11 +459,36 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
 (/usr/local/texlive/2026/texmf-dist/tex/latex/placeins/placeins.sty
 Package: placeins 2005/04/18  v 2.2
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 20.
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/tabularx.sty
+Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/array.sty
+Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
+\col@sep=\dimen258
+\ar@mcellbox=\box58
+\extrarowheight=\dimen259
+\NC@list=\toks29
+\extratabsurround=\skip57
+\backup@length=\skip58
+\ar@cellbox=\box59
+)
+\TX@col@width=\dimen260
+\TX@old@table=\dimen261
+\TX@old@col=\dimen262
+\TX@target=\dimen263
+\TX@delta=\dimen264
+\TX@cols=\count323
+\TX@ftn=\toks30
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/preprint/balance.sty
+Package: balance 1999/02/23 4.3 (PWD)
+\oldvsize=\dimen265
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 22.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count323
+\l__color_backend_stack_int=\count324
 )
 (./house_price_medellin.aux
 LaTeX Info: Redefining \. on input line 14.
@@ -473,41 +498,41 @@ Package babel Info: 'spanish' activates 'spanish' shorthands.
 )
 \openout1 = `house_price_medellin.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
 
 -- Lines per column: 56 (exact).
-LaTeX Info: Redefining \. on input line 32.
-LaTeX Info: Redefining \% on input line 32.
+LaTeX Info: Redefining \. on input line 34.
+LaTeX Info: Redefining \% on input line 34.
 (/usr/local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count324
-\scratchdimen=\dimen258
-\scratchbox=\box58
-\nofMPsegments=\count325
-\nofMParguments=\count326
-\everyMPshowfont=\toks29
-\MPscratchCnt=\count327
-\MPscratchDim=\dimen259
-\MPnumerator=\count328
-\makeMPintoPDFobject=\count329
-\everyMPtoPDFconversion=\toks30
+\scratchcounter=\count325
+\scratchdimen=\dimen266
+\scratchbox=\box60
+\nofMPsegments=\count326
+\nofMParguments=\count327
+\everyMPshowfont=\toks31
+\MPscratchCnt=\count328
+\MPscratchDim=\dimen267
+\MPnumerator=\count329
+\makeMPintoPDFobject=\count330
+\everyMPtoPDFconversion=\toks32
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -517,19 +542,19 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring ON on input line 32.
+Package hyperref Info: Link coloring ON on input line 34.
 
 (./house_price_medellin.out) (./house_price_medellin.out)
 \@outlinefile=\write3
 \openout3 = `house_price_medellin.out'.
 
-LaTeX Info: Redefining \microtypecontext on input line 32.
-Package microtype Info: Applying patch `item' on input line 32.
-Package microtype Info: Applying patch `toc' on input line 32.
-Package microtype Info: Applying patch `eqnum' on input line 32.
-Package microtype Info: Applying patch `footnote' on input line 32.
-Package microtype Info: Applying patch `verbatim' on input line 32.
-LaTeX Info: Redefining \microtypesetup on input line 32.
+LaTeX Info: Redefining \microtypecontext on input line 34.
+Package microtype Info: Applying patch `item' on input line 34.
+Package microtype Info: Applying patch `toc' on input line 34.
+Package microtype Info: Applying patch `eqnum' on input line 34.
+Package microtype Info: Applying patch `footnote' on input line 34.
+Package microtype Info: Applying patch `verbatim' on input line 34.
+LaTeX Info: Redefining \microtypesetup on input line 34.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -548,7 +573,7 @@ File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
 (RS)
 )
-LaTeX Font Info:    Trying to load font information for T1+pcr on input line 55
+LaTeX Font Info:    Trying to load font information for T1+pcr on input line 57
 .
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/psnfss/t1pcr.fd
@@ -566,93 +591,97 @@ local/texlive/2026/texmf-dist/fonts/enc/dvips/base/8r.enc}
 <figures/marked_points.png, id=118, 766.7847pt x 848.4498pt>
 File: figures/marked_points.png Graphic file (type png)
 <use figures/marked_points.png>
-Package pdftex.def Info: figures/marked_points.png  used on input line 155.
+Package pdftex.def Info: figures/marked_points.png  used on input line 152.
 (pdftex.def)             Requested size: 252.0pt x 278.83708pt.
 <figures/centrography.png, id=120, 705.3552pt x 860.013pt>
 File: figures/centrography.png Graphic file (type png)
 <use figures/centrography.png>
-Package pdftex.def Info: figures/centrography.png  used on input line 164.
+Package pdftex.def Info: figures/centrography.png  used on input line 161.
 (pdftex.def)             Requested size: 252.0pt x 307.25548pt.
 <figures/kmeans_selection.png, id=121, 1149.093pt x 426.393pt>
 File: figures/kmeans_selection.png Graphic file (type png)
 <use figures/kmeans_selection.png>
-Package pdftex.def Info: figures/kmeans_selection.png  used on input line 177.
+Package pdftex.def Info: figures/kmeans_selection.png  used on input line 174.
 (pdftex.def)             Requested size: 485.04126pt x 179.98169pt.
 <figures/spatial_kmeans.png, id=122, 706.0779pt x 860.013pt>
 File: figures/spatial_kmeans.png Graphic file (type png)
 <use figures/spatial_kmeans.png>
-Package pdftex.def Info: figures/spatial_kmeans.png  used on input line 184.
+Package pdftex.def Info: figures/spatial_kmeans.png  used on input line 181.
 (pdftex.def)             Requested size: 252.0pt x 306.94052pt.
 <figures/neighborhood_choropleths.png, id=126, 1284.2379pt x 715.473pt>
 File: figures/neighborhood_choropleths.png Graphic file (type png)
 <use figures/neighborhood_choropleths.png>
 Package pdftex.def Info: figures/neighborhood_choropleths.png  used on input li
-ne 195.
+ne 192.
 (pdftex.def)             Requested size: 495.36346pt x 275.97653pt.
  [3 <./figures/marked_points.png>]
 <figures/point_lisa.png, id=136, 705.3552pt x 860.013pt>
 File: figures/point_lisa.png Graphic file (type png)
 <use figures/point_lisa.png>
-Package pdftex.def Info: figures/point_lisa.png  used on input line 208.
+Package pdftex.def Info: figures/point_lisa.png  used on input line 205.
 (pdftex.def)             Requested size: 252.0pt x 307.25548pt.
 <figures/neighborhood_lisa.png, id=138, 705.3552pt x 860.013pt>
 File: figures/neighborhood_lisa.png Graphic file (type png)
 <use figures/neighborhood_lisa.png>
-Package pdftex.def Info: figures/neighborhood_lisa.png  used on input line 217.
+Package pdftex.def Info: figures/neighborhood_lisa.png  used on input line 214.
 
 (pdftex.def)             Requested size: 252.0pt x 307.25548pt.
- [4 <./figures/centrography.png>]
-<figures/mgwr_diagnostics.png, id=149, 1138.2525pt x 568.7649pt>
+
+Underfull \vbox (badness 3579) has occurred while \output is active []
+
+<figures/mgwr_diagnostics.png, id=139, 1138.2525pt x 568.7649pt>
 File: figures/mgwr_diagnostics.png Graphic file (type png)
 <use figures/mgwr_diagnostics.png>
-Package pdftex.def Info: figures/mgwr_diagnostics.png  used on input line 274.
+Package pdftex.def Info: figures/mgwr_diagnostics.png  used on input line 271.
 (pdftex.def)             Requested size: 485.04126pt x 242.36844pt.
-
-Underfull \vbox (badness 3919) has occurred while \output is active []
-
+ [4 <./figures/centrography.png>]
 <figures/gwr_local_r2.png, id=150, 680.0607pt x 714.7503pt>
 File: figures/gwr_local_r2.png Graphic file (type png)
 <use figures/gwr_local_r2.png>
-Package pdftex.def Info: figures/gwr_local_r2.png  used on input line 283.
+Package pdftex.def Info: figures/gwr_local_r2.png  used on input line 280.
 (pdftex.def)             Requested size: 252.0pt x 264.857pt.
+
+Underfull \vbox (badness 3919) has occurred while \output is active []
+
 <figures/hierarchical_effects.png, id=152, 774.7344pt x 848.4498pt>
 File: figures/hierarchical_effects.png Graphic file (type png)
 <use figures/hierarchical_effects.png>
-Package pdftex.def Info: figures/hierarchical_effects.png  used on input line 3
-02.
+Package pdftex.def Info: figures/hierarchical_effects.png  used on input line 2
+99.
 (pdftex.def)             Requested size: 252.0pt x 275.97595pt.
 <figures/selected_variogram.png, id=153, 570.933pt x 354.123pt>
 File: figures/selected_variogram.png Graphic file (type png)
 <use figures/selected_variogram.png>
-Package pdftex.def Info: figures/selected_variogram.png  used on input line 313
+Package pdftex.def Info: figures/selected_variogram.png  used on input line 310
 .
-(pdftex.def)             Requested size: 252.0pt x 156.3063pt.
+(pdftex.def)             Requested size: 221.76123pt x 137.54544pt.
  [5 <./figures/kmeans_selection.png> <./figures/spatial_kmeans.png>]
-<figures/continuous_validation.png, id=163, 1292.9103pt x 354.123pt>
+<figures/continuous_validation.png, id=164, 1292.9103pt x 354.123pt>
 File: figures/continuous_validation.png Graphic file (type png)
 <use figures/continuous_validation.png>
 Package pdftex.def Info: figures/continuous_validation.png  used on input line 
-347.
-(pdftex.def)             Requested size: 485.04126pt x 132.84982pt.
-<figures/kriging_surface.png, id=165, 541.3023pt x 570.933pt>
+344.
+(pdftex.def)             Requested size: 252.0pt x 69.01857pt.
+<figures/kriging_surface.png, id=166, 541.3023pt x 570.933pt>
 File: figures/kriging_surface.png Graphic file (type png)
 <use figures/kriging_surface.png>
-Package pdftex.def Info: figures/kriging_surface.png  used on input line 356.
-(pdftex.def)             Requested size: 252.0pt x 265.79471pt.
-<figures/gaussian_uncertainty.png, id=166, 541.3023pt x 570.933pt>
+Package pdftex.def Info: figures/kriging_surface.png  used on input line 353.
+(pdftex.def)             Requested size: 196.5597pt x 207.31291pt.
+<figures/gaussian_uncertainty.png, id=167, 541.3023pt x 570.933pt>
 File: figures/gaussian_uncertainty.png Graphic file (type png)
 <use figures/gaussian_uncertainty.png>
 Package pdftex.def Info: figures/gaussian_uncertainty.png  used on input line 3
-63.
-(pdftex.def)             Requested size: 252.0pt x 265.79471pt.
- [6 <./figures/neighborhood_choropleths.png>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+60.
+(pdftex.def)             Requested size: 196.5597pt x 207.31291pt.
+ [6 <./figures/neighborhood_choropleths.png>] [7 <./figures/point_lisa.png> <./
+figures/neighborhood_lisa.png>] [8 <./figures/mgwr_diagnostics.png> <./figures/
+gwr_local_r2.png> <./figures/hierarchical_effects.png>]
 
- [7 <./figures/point_lisa.png> <./figures/neighborhood_lisa.png>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Package balance Warning: You have called \balance in second column
+(balance)                Columns might not be balanced.
 
- [8 <./figures/mgwr_diagnostics.png> <./figures/gwr_local_r2.png> <./figures/hi
-erarchical_effects.png>] [9 <./figures/selected_variogram.png>]
+[9 <./figures/selected_variogram.png> <./figures/continuous_validation.png> <./
+figures/kriging_surface.png> <./figures/gaussian_uncertainty.png>]
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -664,8 +693,11 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[10 <./figures/continuous_validation.png> <./figures/kriging_surface.png> <./fi
-gures/gaussian_uncertainty.png>] (./house_price_medellin.aux
+
+Overfull \vbox (1.59895pt too high) has occurred while \output is active []
+
+
+[10] (./house_price_medellin.aux
 LaTeX Info: Redefining \. on input line 14.
 LaTeX Info: Redefining \% on input line 14.
 )
@@ -677,13 +709,13 @@ Package rerunfilecheck Info: File `house_price_medellin.out' has not changed.
 (rerunfilecheck)             Checksum: 3508BF76810D933B0697063D9B6226B0;3239.
  ) 
 Here is how much of TeX's memory you used:
- 14762 strings out of 467525
- 237414 string characters out of 5418982
- 712945 words of memory out of 5000000
- 43164 multiletter control sequences out of 15000+600000
- 757993 words of font info for 336 fonts, out of 8000000 for 9000
+ 14914 strings out of 467525
+ 240020 string characters out of 5418982
+ 714471 words of memory out of 5000000
+ 43311 multiletter control sequences out of 15000+600000
+ 756446 words of font info for 333 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,9n,79p,1735b,616s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,10n,79p,1735b,482s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
@@ -692,20 +724,21 @@ sr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr
 /local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/l
 ocal/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/l
 ocal/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loc
-al/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/
-texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/tex
-live/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texliv
-e/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2
-026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/20
-26/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2026/texmf
--dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2026/texmf-dist/font
-s/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/u
-rw/times/utmr8a.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/urw/times/u
-tmri8a.pfb>
-Output written on house_price_medellin.pdf (10 pages, 3538673 bytes).
+al/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/
+texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/tex
+live/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texliv
+e/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2
+026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/
+texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2026/texmf-di
+st/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2026/texmf-dist/fonts/t
+ype1/urw/times/utmbi8a.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/urw/
+times/utmr8a.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/urw/times/utmr
+i8a.pfb>
+Output written on house_price_medellin.pdf (10 pages, 3546801 bytes).
 PDF statistics:
- 308 PDF objects out of 1000 (max. 8388607)
- 229 compressed objects within 3 object streams
+ 313 PDF objects out of 1000 (max. 8388607)
+ 232 compressed objects within 3 object streams
  51 named destinations out of 1000 (max. 500000)
- 60119 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 57559 words of extra memory for PDF output out of 61914 (max. 10000000)
 
