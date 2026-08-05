@@ -36,17 +36,17 @@ Curso de Análisis Geoespacial
 \maketitle
 
 \begin{abstract}
-En este trabajo se analiza cómo se relaciona la ubicación geográfica de una vivienda en Medellín con su precio de venta. Se parte de un conjunto de datos de la plataforma Kaggle que contiene información sobre inmuebles en Colombia, como el número de habitaciones, dormitorios y baños, su ubicación y su precio de venta, entre otros datos. El precio está expresado en pesos colombianos. Para aplicar los modelos estudiados, se realizó la limpieza, el filtrado, el procesamiento y la normalización de los datos. Asimismo, se utilizó el logaritmo natural del precio para estabilizar los análisis. Los inmuebles se representaron como puntos marcados y se estudiaron mediante técnicas de análisis geoespacial. También se utilizaron métodos de aprendizaje automático, como Random Forest, para comparar los resultados con los de los modelos espaciales. El precio logarítmico presentó dependencia espacial positiva y significativa ($I$ de Moran de 0.5898 con diez vecinos, $p=0.001$). El modelo SAR-Lag confirmó una relación positiva con los precios vecinos ($\rho=0.5496$), mientras que el MGWR y el modelo jerárquico mostraron que el efecto de los atributos y el nivel base del precio cambian entre zonas y barrios. En la evaluación, Random Forest fue el modelo con mayor capacidad predictiva ($R^2=0.7756$ y RMSE de 0.3485 en escala logarítmica); entre los modelos espaciales interpretables, SAR-Lag fue el mejor ($R^2=0.5997$). Por tanto, la ubicación se relaciona con el precio por el contexto barrial, la semejanza entre viviendas cercanas y la variación territorial de las relaciones.
+En este trabajo se analiza cómo se relaciona la ubicación geográfica de una vivienda en Medellín con su precio de venta. Se parte de un conjunto de datos de la plataforma Kaggle que contiene información sobre inmuebles en Colombia, como el número de habitaciones, dormitorios y baños, su ubicación y su precio de venta, entre otros datos. El precio está expresado en pesos colombianos. Para aplicar los modelos estudiados, se realizó la limpieza, el filtrado, el procesamiento y la normalización de los datos. Asimismo, se utilizó el logaritmo natural del precio para estabilizar los análisis. Los inmuebles se representaron como puntos marcados y se estudiaron mediante técnicas de análisis geoespacial. También se utilizaron métodos de aprendizaje automático, como Random Forest, para comparar sus resultados con los de los modelos espaciales. El precio logarítmico presentó dependencia espacial positiva y significativa ($I$ de Moran de 0.5898 con diez vecinos, $p=0.001$). El modelo SAR-Lag confirmó una relación positiva con los precios vecinos ($\rho=0.5496$), mientras que MGWR y el modelo jerárquico mostraron que el efecto de los atributos y el nivel base del precio cambian entre zonas y barrios. En la evaluación, Random Forest fue el modelo con mayor capacidad predictiva ($R^2=0.7756$ y RMSE de 0.3485 en escala logarítmica); entre los modelos espaciales interpretables, SAR-Lag fue el mejor ($R^2=0.5997$). Por tanto, la ubicación se relaciona con el precio mediante el contexto barrial, la semejanza entre viviendas cercanas y la variación territorial de las relaciones.
 \end{abstract}
 
 
 \section{Introducción}
 
-El precio de una vivienda no depende únicamente de características como las habitaciones, los dormitorios o los baños. Dos inmuebles similares pueden tener precios diferentes si se encuentran en barrios distintos. La accesibilidad, la seguridad, los servicios cercanos, la calidad del entorno y la valoración de cada sector ayudan a explicar esa diferencia. Además, las viviendas cercanas suelen compartir condiciones de mercado y, por esta razón, sus precios pueden parecerse.
+El precio de una vivienda no depende únicamente de sus características como el número de habitaciones, la cantidad de dormitorios o el número de baños. Dos inmuebles similares pueden tener precios diferentes si se encuentran en barrios distintos. La accesibilidad, la seguridad, los servicios cercanos, la calidad del entorno y la valoración de cada sector ayudan a explicar esa diferencia. Además, las viviendas cercanas suelen compartir condiciones de mercado y, por esta razón, sus precios pueden parecerse.
 
 Este comportamiento se estudia mediante dos conceptos. La \emph{dependencia espacial} aparece cuando el precio de una vivienda se relaciona con los precios de las viviendas cercanas. La \emph{heterogeneidad espacial} aparece cuando una característica no se relaciona de la misma manera con el precio en toda la ciudad. Por ejemplo, un baño adicional puede tener una relación más fuerte con el precio en una zona que en otra.
 
-Los materiales del curso presentan métodos para estudiar estas dos dimensiones, desde patrones de puntos y autocorrelación hasta modelos locales, jerárquicos y procesos gaussianos \cite{materialcurso,librocurso}. Con base en estos métodos, el proyecto responde dos preguntas: ¿cómo se relaciona la ubicación geográfica de una vivienda en Medellín con su precio?, y ¿cómo la ubicación y la cercanía de inmuebles vecinos ayudan a explicar y predecir su precio de venta?
+Este trabajo hace parte del proyecto realizado para la materia de análisis geoespacial, de la Universidad Nacional de Colombia. Los materiales del curso presentan métodos para estudiar estas dos dimensiones, desde patrones de puntos y autocorrelación hasta modelos locales, jerárquicos y procesos gaussianos \cite{materialcurso,librocurso}. Con base en estos métodos, el proyecto responde dos preguntas: ¿cómo se relaciona la ubicación geográfica de una vivienda en Medellín con su precio?, y ¿cómo la ubicación y la cercanía de inmuebles vecinos ayudan a explicar y predecir su precio de venta?
 
 El objetivo consiste en describir el patrón territorial del precio, medir la dependencia espacial, evaluar si las relaciones cambian entre zonas y comparar métodos de predicción. El análisis no busca establecer relaciones causales. Los resultados muestran asociaciones espaciales y permiten establecer cuánto aporta cada método a la explicación o predicción del precio.
 
@@ -54,11 +54,11 @@ El objetivo consiste en describir el patrón territorial del precio, medir la de
 
 \subsection{Datos y representación espacial}
 
-Los datos se descargaron directamente desde Kaggle a partir del conjunto \emph{Colombia Housing Properties Price} \cite{dataset}. Cada observación corresponde a un anuncio inmobiliario y la variable original \texttt{price} contiene el precio de venta anunciado en pesos colombianos. Para construir el conjunto de análisis, se seleccionaron las columnas útiles, se filtró Medellín y se conservaron únicamente las operaciones de venta. También se eliminaron las columnas constantes o sin información para la ciudad, como los niveles \texttt{l5} y \texttt{l6}, además del título del anuncio.
+Los datos se descargaron directamente desde Kaggle a partir del conjunto \emph{Colombia Housing Properties Price} \cite{dataset}. Cada observación corresponde a un anuncio inmobiliario y la variable original \texttt{price} contiene el precio de venta anunciado en pesos colombianos. Para construir el conjunto de análisis, se seleccionaron las columnas útiles, se filtraron los anuncios correspondientes a la ciudad de Medellín y se conservaron únicamente las operaciones de venta. También se eliminaron las columnas constantes o sin información para la ciudad, como los niveles \texttt{l5} y \texttt{l6}, además del título del anuncio.
 
 De los 119\,394 anuncios de venta identificados en Medellín, se eliminaron los registros sin coordenadas o sin precio. Para reducir el efecto de los valores extremos, se conservaron los precios entre los percentiles 1 y 99. El conjunto final contiene 35\,814 anuncios, con precios entre 82 y 4,200 millones de pesos y una mediana de 420 millones. Los datos se dividieron una sola vez en 25\,069 observaciones de entrenamiento (70\,\%) y 10\,745 de prueba (30\,\%), con semilla 42.
 
-Los valores numéricos faltantes se imputaron con la mediana del conjunto de entrenamiento y después se estandarizaron con media cero y desviación estándar uno. Los valores categóricos faltantes se imputaron con la categoría más frecuente. El barrio y el tipo de propiedad se codificaron mediante variables indicadoras. Todo el preprocesamiento se ajustó solo con los datos de entrenamiento y luego se aplicó a prueba para evitar fuga de información. Las variables de superficie tenían pocos datos disponibles; por esto, se usaron en los modelos generales de aprendizaje automático, pero no en los modelos espaciales explicativos.
+Los valores numéricos faltantes se imputaron con la mediana del conjunto de entrenamiento y después se estandarizaron con media cero y desviación estándar uno. Los valores categóricos faltantes se imputaron con la categoría más frecuente. El barrio y el tipo de propiedad se codificaron mediante variables indicadoras (One Hot Encoding). Todo el preprocesamiento se ajustó solo con los datos de entrenamiento y luego se aplicó a prueba para evitar fuga de información. Las variables de superficie tenían pocos datos disponibles; por esto, se usaron en los modelos generales de aprendizaje automático, pero no en los modelos espaciales explicativos.
 
 Las variables empleadas incluyen precio, longitud, latitud, barrio, tipo de propiedad, habitaciones, dormitorios y baños. El precio original se conservó para describir resultados en pesos. Debido a su asimetría, para la etapa espacial se creó una variable adicional:
 \begin{equation*}
@@ -68,7 +68,7 @@ El logaritmo reduce la influencia de las viviendas muy costosas y facilita la co
 
 Los anuncios se representaron como puntos y se proyectaron en MAGNA-SIRGAS / Origen-Nacional (EPSG:9377), un sistema cuyas unidades están en metros. Como algunos registros etiquetados como Medellín se encontraban fuera del municipio, el análisis espacial conservó únicamente los puntos dentro de sus límites. La unión espacial con 252 polígonos del material del curso asignó 22\,857 puntos de entrenamiento a 226 barrios con al menos un anuncio. GWR, MGWR y los modelos continuos utilizaron muestras de estas geometrías para controlar el costo computacional.
 
-El código utilizado para el procesamiento, los modelos y la generación de las figuras está disponible en el repositorio del proyecto \cite{repositorio}.
+El código utilizado para el procesamiento, los modelos y la generación de las figuras está disponible en el repositorio del proyecto en la plataforma GitHub \cite{repositorio}.
 
 \subsection{Patrón de puntos y agrupamiento}
 
@@ -117,9 +117,9 @@ GWR (\emph{Geographically Weighted Regression}) estima coeficientes alrededor de
 \end{equation*}
 Esta formulación corresponde al desarrollo de GWR y MGWR presentado en el libro del curso \cite{librocurso}.
 
-Se seleccionaron 1\,890 puntos distribuidos dentro de Medellín. Los predictores fueron habitaciones, dormitorios y baños estandarizados. El ancho de banda se seleccionó mediante AICc, un criterio que compara el ajuste y la complejidad y penaliza los parámetros innecesarios. También se evaluaron la significancia local, el número de condición y Moran residual.
+Se seleccionaron 1\,890 puntos distribuidos dentro de Medellín. Los predictores fueron número de habitaciones, número de dormitorios y número de baños estandarizados. El ancho de banda se seleccionó mediante AICc, un criterio que compara el ajuste y la complejidad y penaliza los parámetros innecesarios. También se evaluaron la significancia local, el número de condición y Moran residual.
 
-Para representar los barrios como regímenes se compararon OLS, un \emph{Random Intercept Model} y un modelo con intercepto y pendiente aleatoria de baños. El ICC se calculó como:
+Para representar los barrios como regímenes se compararon OLS, un modelo de intercepto aleatorio y un modelo con intercepto y pendiente aleatorios de baños. El ICC se calculó como:
 \begin{equation*}
     \mathrm{ICC}=
     \frac{\sigma^2_{\text{barrio}}}
@@ -145,7 +145,7 @@ La representación mediante funciones de covarianza y ruido se basa en los capí
 
 \subsection{Patrón espacial y barrios}
 
-La Fig.~\ref{fig:marked-points} presenta cada vivienda en su ubicación y usa el precio logarítmico como marca. Los anuncios se concentran principalmente en el corredor central, el occidente y el sur de Medellín. Los valores altos aparecen con mayor frecuencia en el suroriente, especialmente en El Poblado. El logaritmo permite observar este patrón sin que unos pocos precios extremos controlen la escala de color. Las zonas con pocos puntos tienen menor cobertura de anuncios y no necesariamente menos viviendas.
+La Fig.~\ref{fig:marked-points} presenta cada vivienda como un punto marcado usando el precio logarítmico como marca. Los anuncios se concentran principalmente en la zona central, el occidente y el sur de Medellín. Los valores altos aparecen con mayor frecuencia en el suroriente, especialmente en El Poblado. El logaritmo permite observar este patrón sin que unos pocos precios extremos controlen la escala de color. Las zonas con pocos puntos tienen menor cobertura de anuncios y no necesariamente menos viviendas.
 
 \begin{figure}[!t]
     \centering
@@ -167,7 +167,7 @@ La superficie kernel varió aproximadamente entre 19.00 y 20.64 en escala logar�
 
 Una zona con muchos puntos no necesariamente presenta el mayor precio local, porque la superficie divide la suma ponderada del precio por la densidad de anuncios. Las zonas sin soporte suficiente no se estiman y, por tanto, no representan precios bajos.
 
-K-means seleccionó tres clusters con un Silhouette de 0.520. El cluster 0 agrupó sectores centrales y del norte, como La Candelaria y Boston, con una mediana de 250 millones. El cluster 1 cubrió gran parte del occidente, incluidos Laureles, Los Conquistadores y Belén, con 340 millones. El cluster 2 reunió principalmente sectores de El Poblado, como El Tesoro, San Lucas, Los Balsos y Castropol, y alcanzó 690 millones. El precio no se utilizó para crear los grupos; las diferencias se calcularon después de agrupar los puntos por su ubicación.
+K-means seleccionó tres clusters con un Silhouette de 0.520. El cluster 0 agrupó viviendas del centro y del norte, como La Candelaria y Boston, con una mediana en el precio de 250 millones. El cluster 1 cubrió gran parte del occidente, incluidos Laureles, Los Conquistadores y Belén, con mediana 340 millones. El cluster 2 reunió principalmente sectores de El Poblado, como El Tesoro, San Lucas, Los Balsos y Castropol, y alcanzó 690 millones. El precio no se utilizó para crear los grupos; las diferencias se calcularon después de agrupar los puntos por su ubicación.
 
 \begin{figure*}[!t]
     \centering
@@ -183,14 +183,14 @@ K-means seleccionó tres clusters con un Silhouette de 0.520. El cluster 0 agrup
     \label{fig:kmeans}
 \end{figure}
 
-La Fig.~\ref{fig:kmeans-selection} explica la selección de tres grupos: en este punto aparece el mayor Silhouette y la reducción de la inercia empieza a ser menor. La Fig.~\ref{fig:kmeans} muestra su distribución en Medellín. Las diferencias entre medianas indican que la ubicación permite identificar zonas con mercados distintos. Sin embargo, los clusters son regiones estadísticas definidas por cercanía a centroides; no reemplazan los barrios ni demuestran que la ubicación cause el precio.
+La Fig.~\ref{fig:kmeans-selection} explica la selección del valor de tres para los grupos k-means: en este punto aparece el mayor Silhouette y la reducción de la inercia empieza a ser menor. La Fig.~\ref{fig:kmeans} muestra su distribución en Medellín. Las diferencias entre medianas indican que la ubicación permite identificar zonas con mercados distintos. Sin embargo, los clusters son regiones estadísticas definidas por cercanía a centroides; no reemplazan los barrios ni demuestran que la ubicación cause el precio.
 
-Las coropletas de la Fig.~\ref{fig:choropleths} separan el nivel del precio de la cantidad de anuncios. El mapa izquierdo muestra medianas mayores en el sur y el suroriente, mientras gran parte del norte presenta valores menores. El mapa derecho muestra una densidad desigual, concentrada en algunos barrios del centro, el occidente y el sur. Un barrio oscuro en el mapa de densidad no es necesariamente más costoso; solo tiene más anuncios por unidad de área. Las áreas blancas no cuentan con información suficiente en la muestra.
+Las coropletas de la Fig.~\ref{fig:choropleths} muestran el precio y la cantidad de anuncios por barrio. El mapa izquierdo muestra medianas mayores en el sur y el suroriente, mientras gran parte del norte presenta valores menores. El mapa derecho muestra una densidad desigual, concentrada en algunos barrios del centro, el occidente y el sur. Un barrio oscuro en el mapa de densidad no es necesariamente más costoso; solo tiene más anuncios por unidad de área. Las áreas blancas no cuentan con información suficiente en la muestra.
 
 \begin{figure*}[!t]
     \centering
     \includegraphics[width=0.96\textwidth]{neighborhood_choropleths.png}
-    \caption{Resultados por barrio. Izquierda: precio logarítmico mediano. Derecha: densidad de anuncios por kilómetro cuadrado. Ambos mapas incluyen coordenadas, escala y norte.}
+    \caption{Resultados por barrio. Izquierda: precio logarítmico mediano. Derecha: densidad de anuncios por kilómetro cuadrado.}
     \label{fig:choropleths}
 \end{figure*}
 
@@ -198,7 +198,7 @@ Las coropletas de la Fig.~\ref{fig:choropleths} separan el nivel del precio de l
 
 Los resultados confirman dependencia espacial. Moran fue 0.6254 para $k=5$, 0.5898 para $k=10$ y 0.5553 para $k=20$; en los tres casos, $p=0.001$. Los valores positivos y significativos indican que las viviendas cercanas tienden a presentar precios similares. Moran disminuye al incluir más vecinos porque la relación es más fuerte en el entorno inmediato y se suaviza al ampliar el vecindario. Aun así, la dependencia permanece con veinte vecinos. En este análisis, $k$ corresponde a KNN y no a los tres clusters de K-means.
 
-LISA puntual clasificó 23.81\,\% de las viviendas como Alto--Alto y 24.44\,\% como Bajo--Bajo. Los casos Bajo--Alto representaron 3.23\,\% y los Alto--Bajo 2.09\,\%. A escala barrial, Moran fue 0.4752 ($p=0.001$). Se encontraron 29 barrios Alto--Alto, con una mediana conjunta de 690 millones, y 37 Bajo--Bajo, con 165 millones.
+LISA puntual clasificó 23.81\,\% de las viviendas como Alto--Alto y 24.44\,\% como Bajo--Bajo. Los casos Bajo--Alto representaron 3.23\,\% y los Alto--Bajo 2.09\,\%. A escala barrial, Moran fue 0.4752 ($p=0.001$). Se encontraron 29 barrios Alto--Alto, con una mediana conjunta de 690 millones, y 37 Bajo--Bajo, con 165 millones. El 46.4 \% no presenta asociación local significativa.
 
 \begin{figure}[!t]
     \centering
@@ -337,7 +337,7 @@ Proceso gaussiano & 0.1610 & 0.3951 & 0.5302 & 0.2481\\
 \end{tabular}
 \end{table}
 
-Regresión-Kriging fue el mejor método continuo. Primero explicó parte del precio mediante los atributos de la vivienda y después utilizó la cercanía para interpolar los residuos. Su Moran residual de 0.0657 ($p=0.017$) fue menor que el de Kriging y el proceso gaussiano, aunque todavía fue significativo.
+Regresión-Kriging fue el mejor método continuo. Primero explicó parte del precio mediante los atributos de la vivienda y después utilizó la cercanía para interpolar los residuos. Su Moran residual de 0.0657 ($p=0.017$) fue menor que el de Kriging ordinario y el proceso gaussiano, aunque todavía fue significativo.
 
 \begin{figure}[!htbp]
     \centering
@@ -368,7 +368,7 @@ La Fig.~\ref{fig:gp-uncertainty} muestra menor incertidumbre en las zonas centra
 
 \subsection{Comparación final de métodos}
 
-La Tabla~\ref{tab:final-comparison} reúne los resultados de la última ejecución. Un $R^2$ mayor representa una mayor proporción explicada, un RMSE menor representa errores más pequeños y un $I$ de Moran residual cercano a cero indica que queda poca estructura espacial sin explicar. El modelo jerárquico no presenta $R^2$ ni Moran porque estas métricas no se calcularon en su salida final; su comparación se realizó mediante AIC y RMSE.
+La Tabla~\ref{tab:final-comparison} reúne los resultados obtenidos al ejecutar los modelos. Un $R^2$ mayor representa una mayor proporción explicada, un RMSE menor representa errores más pequeños y un $I$ de Moran residual cercano a cero indica que queda poca estructura espacial sin explicar. El modelo jerárquico no presenta $R^2$ ni Moran porque estas métricas no se calcularon en su salida final; su comparación se realizó mediante AIC y RMSE.
 
 \begin{table}[!htbp]
 \caption{Comparación final de modelos sobre el precio logarítmico}
@@ -399,7 +399,7 @@ Los modelos no se evaluaron con el mismo protocolo. OLS, SEM, SAR-Lag y los mét
 
 \section{Discusión}
 
-Los resultados muestran una relación clara entre la ubicación y el precio. El cluster localizado principalmente en El Poblado presentó una mediana superior a las de los clusters del occidente y del centro-norte. Esto no significa que la coordenada cause el precio. La ubicación representa condiciones del barrio y del entorno que no aparecen directamente en los datos.
+Los resultados muestran una relación clara entre la ubicación y el precio de una vivienda en Medellín. El cluster localizado principalmente en El Poblado presentó una mediana superior a las de los clusters del occidente y del centro-norte. Esto no significa que la coordenada cause el precio. La ubicación representa condiciones del barrio y del entorno que no aparecen directamente en los datos.
 
 La comparación muestra que explicar y predecir son objetivos diferentes. Random Forest alcanzó el mayor $R^2$ de prueba al identificar relaciones no lineales entre la ubicación, el barrio, el tipo de propiedad y los atributos físicos. Sin embargo, no describe de forma directa el mecanismo espacial. SAR-Lag tuvo menor precisión, pero su parámetro espacial positivo mostró que los precios de viviendas vecinas se relacionan incluso después de controlar los atributos incluidos.
 
@@ -407,11 +407,11 @@ La cercanía también aporta información. Moran, LISA y SAR muestran que los pr
 
 SEM ofrece una explicación complementaria. Su parámetro alto y el error filtrado sin dependencia significativa indican que parte de la agrupación corresponde a factores territoriales omitidos. Por ejemplo, las viviendas cercanas pueden compartir condiciones de transporte, seguridad, ruido o calidad urbana. SAR representa la relación con el precio vecino y SEM representa condiciones espaciales no observadas. Los dos mecanismos pueden presentarse al mismo tiempo.
 
-Los resultados también confirman heterogeneidad espacial. MGWR mejoró a GWR y utilizó una escala distinta para cada atributo. El efecto de baños fue positivo, pero su intensidad cambió entre zonas. El modelo jerárquico apoyó este resultado, pues casi la mitad de la variación restante estuvo asociada con diferencias entre barrios.
+Los resultados también confirman heterogeneidad espacial. MGWR mejoró a GWR y utilizó una escala distinta para cada atributo. El efecto del número de baños fue positivo, pero su intensidad cambió entre zonas. El modelo jerárquico apoyó este resultado, pues casi la mitad de la variación restante estuvo asociada con diferencias entre barrios.
 
 El mapa de $R^2$ local muestra que la capacidad explicativa cambia dentro de Medellín. Un resultado global oculta zonas donde los atributos disponibles explican bien el precio y otras donde son insuficientes. Por esto, GWR y MGWR mejoran al OLS calculado sobre la misma muestra, aunque ningún modelo local alcanza un ajuste uniforme en toda la ciudad.
 
-La validación por bloques fue más exigente que una partición aleatoria porque evaluó zonas completas no observadas. Por esta razón, los $R^2$ de interpolación fueron menores y no deben compararse directamente con SAR, GWR o MGWR. Regresión-Kriging obtuvo el mejor resultado porque combinó los atributos con la dependencia espacial. Kriging y el proceso gaussiano dependieron principalmente de las coordenadas y representaron con menor precisión las diferencias propias de cada vivienda.
+La validación por bloques fue más exigente que una partición aleatoria porque evaluó zonas completas no observadas. Por esta razón, los $R^2$ de interpolación fueron menores y no deben compararse directamente con SAR, GWR o MGWR. Regresión-Kriging obtuvo el mejor resultado porque combinó los atributos con la dependencia espacial. Kriging ordinario y el proceso gaussiano dependieron principalmente de las coordenadas y representaron con menor precisión las diferencias propias de cada vivienda.
 
 Las superficies de incertidumbre evitan interpretar las predicciones como valores exactos. La mayor incertidumbre en la periferia coincide con una menor cantidad de anuncios cercanos y una mayor distancia a los datos de entrenamiento. Estas zonas requieren más información antes de utilizar la predicción en una decisión concreta.
 
@@ -422,11 +422,11 @@ La predicción del precio es difícil porque no se cuenta con algunas variables 
 \balance
 \section{Conclusiones}
 
-La ubicación geográfica está relacionada con el precio de venta anunciado de las viviendas en Medellín. El suroriente, especialmente El Poblado, concentra precios más altos, mientras varios sectores del centro-norte y el norte presentan valores menores. La ubicación representa el contexto urbano y barrial, pero no actúa como una causa aislada del precio.
+La ubicación geográfica está relacionada con el precio de venta de las viviendas en Medellín. El suroriente, especialmente El Poblado, concentra precios más altos, mientras varios sectores del centro-norte y el norte presentan valores menores. La ubicación representa el contexto urbano y barrial, pero no actúa como una causa aislada del precio.
 
 Existe dependencia espacial porque los precios cercanos tienden a parecerse. Moran global y LISA muestran agrupaciones significativas, mientras SAR confirma una relación positiva con los precios vecinos. SEM indica que también existen factores territoriales no observados compartidos por viviendas cercanas.
 
-También existe heterogeneidad espacial. MGWR mostró que habitaciones, dormitorios y baños actúan a escalas diferentes y que sus coeficientes cambian dentro de la ciudad. Baños presentó la relación local más constante, aunque su intensidad cambió entre zonas.
+También existe heterogeneidad espacial. MGWR mostró que el número de habitaciones, número de dormitorios y número de baños actúan a escalas diferentes y que sus coeficientes cambian dentro de la ciudad. El número de baños presentó la relación local más constante, aunque su intensidad cambió entre zonas.
 
 Los barrios tienen un papel importante. El ICC de 0.4809 indica que cerca del 48\,\% de la variación restante corresponde a diferencias entre barrios. Por esta razón, dos viviendas con atributos similares pueden presentar precios distintos según su contexto territorial.
 

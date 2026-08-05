@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1785968683.6892 "house_price_medellin.tex" "house_price_medellin.pdf" "house_price_medellin" 1785968686.87861 0
+["pdflatex"] 1785971865.1427 "house_price_medellin.tex" "house_price_medellin.pdf" "house_price_medellin" 1785971868.05804 0
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/adobe/courier/pcrr8r.tfm" 1136768653 1292 bd42be2f344128bff6d35d98474adfe3 ""
@@ -147,9 +147,9 @@
   "figures/point_lisa.png" 1785878805.81558 515457 0343ff706f486be5e463a21418c93c0a ""
   "figures/selected_variogram.png" 1785531639.29482 33658 9561763571bac284446a511d2afb67ef ""
   "figures/spatial_kmeans.png" 1785879236.31 467863 8bbf884850f459326afa108fcf5451dd ""
-  "house_price_medellin.aux" 1785968686.76018 10378 4ac7d9c3c623b68cb854adfb35b4b279 "pdflatex"
-  "house_price_medellin.out" 1785968686.76217 3239 3508bf76810d933b0697063d9b6226b0 "pdflatex"
-  "house_price_medellin.tex" 1785968676.73235 38561 d92df0d683f0cfe4e89dc9417817bffa ""
+  "house_price_medellin.aux" 1785971867.95473 10278 faa36f941497b1a2de2130154f3b9f43 "pdflatex"
+  "house_price_medellin.out" 1785971867.95696 3239 3508bf76810d933b0697063d9b6226b0 "pdflatex"
+  "house_price_medellin.tex" 1785971856.95586 39021 88bedff25e0a91e964685372c32da40c ""
   (generated)
   "house_price_medellin.aux"
   "house_price_medellin.log"
